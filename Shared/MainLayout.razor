@@ -1,0 +1,31 @@
+@inherits LayoutComponentBase
+@using MudBlazor
+
+<MudThemeProvider Theme="@MyTheme" />
+
+    <MudLayout>
+        <MudAppBar Color="Color.Primary" Elevation="4">
+            <MudText Typo="Typo.h6">Weather App</MudText>
+        </MudAppBar>
+
+        <MudMainContent>
+            @Body
+        </MudMainContent>
+    </MudLayout>
+
+@code {
+    private MudTheme MyTheme = new MudTheme
+    {
+        PaletteLight = new PaletteLight
+        {
+            Primary = "#1976d2",       // Blue
+            Secondary = "#ff9800",     // Orange
+            AppbarBackground = "#1565c0",
+            AppbarText = "#ffffff",
+            DrawerBackground = "#e3f2fd",
+            DrawerText = "#0d47a1",
+            Background = "#f5f5f5",
+            Surface = "#ffffff"
+        }
+    };
+}

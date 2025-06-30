@@ -1,0 +1,77 @@
+@page "/login"
+@using MudBlazor
+@using WSService.Services
+@using static BCrypt.Net.BCrypt
+@rendermode InteractiveServer
+@inject MongoUserService UserService
+@inject NavigationManager Navigation
+@using System.ComponentModel.DataAnnotations
+
+<MudContainer MaxWidth="MaxWidth.ExtraSmall" Class="mt-10">
+    <MudPaper Class="pa-6" Elevation="6">
+        <MudText Typo="Typo.h5" Class="mb-4 text-center">Login to Your Account</MudText>
+
+        <EditForm Model="@loginModel" OnValidSubmit="@HandleLogin">
+            <MudForm @ref="form">
+                <MudTextField @bind-Value="loginModel.Email" Label="Email" Variant="Variant.Filled"
+                              For="@(() => loginModel.Email)" Required="true"
+                              Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Email"
+                              Class="mb-3" />
+
+                <MudTextField @bind-Value="loginModel.Password" Label="Password" Variant="Variant.Filled"
+                              InputType="InputType.Password"
+                              For="@(() => loginModel.Password)" Required="true"
+                              Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Lock"
+                              Class="mb-4" />
+
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="LoginUser" Class="mt-3 w-100">
+                    Login
+                </MudButton>
+            </MudForm>
+        </EditForm>
+
+        <MudText Class="mt-4 text-center">
+            Don't have an account?
+            <MudLink Href="/signin">Sign up now</MudLink>
+        </MudText>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private MudForm? form;
+    private LoginModel loginModel = new();
+    private string email = "";
+    private string password = "";
+
+    private void HandleLogin()
+    {
+        Console.WriteLine($"🔐 Login Attempt: {loginModel.Email}");
+       
+    }
+
+     private async Task LoginUser()
+    {
+        var user = await UserService.GetUserAsync(email);
+        if (user != null && Verify(password, user.Password))
+        {
+            Console.WriteLine("Invalid login.");
+            return;
+        }
+        else
+        {
+        Console.WriteLine("❌ Invalid credentials.");
+        }
+
+        
+        Navigation.NavigateTo("/");
+    }
+
+    public class LoginModel
+    {
+        [Required, EmailAddress]
+        public string Email { get; set; } = "";
+
+        [Required]
+        public string Password { get; set; } = "";
+    }
+}

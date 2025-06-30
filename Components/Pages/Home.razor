@@ -1,0 +1,189 @@
+﻿@page "/"
+@using WRModel.Models
+@using WSService.Services
+@using MudBlazor
+@rendermode InteractiveServer
+@inject WeatherService WSService
+@inject SearchHistoryService SearchService
+@inject MongoUserService UserService
+
+<PageTitle>Home</PageTitle>
+
+<MudAppBar Color="Color.Secondary" Fixed="true" Class="mud-appbar">
+    <MudText Typo="Typo.h4">WeatherApp</MudText>
+
+    <MudSpacer />
+
+    <MudButton Link="/signin" Variant="Variant.Text" Color="Color.Inherit" Typo="Typo.h5">Signin</MudButton>
+    <MudButton Link="/login" Variant="Variant.Text" Color="Color.Inherit" Typo="Typo.h5">Login</MudButton>
+</MudAppBar>
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-6 mud-container">
+    <MudPaper Class="pa-4 mud-paper">
+        <MudTextField @bind-Value="city" Label="Enter City" Variant="Variant.Filled" Class="mb-3 mud-textfield" />
+
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SearchWeather">
+            Get Weather
+        </MudButton>
+
+        @if (isLoading)
+        {
+            <MudProgressCircular Indeterminate="true" Color="Color.Primary" Class="mt-4" />
+        }
+        else if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <MudAlert Severity="Severity.Error" Class="mt-4">@errorMessage</MudAlert>
+        }
+        else if (weatherData != null)
+        {
+            <MudPaper Class="mt-4 pa-4 mud-paper" Elevation="4">
+                <MudText Typo="Typo.h5">@weatherData.name, @weatherData.sys.country</MudText>
+                <MudText Typo="Typo.subtitle1"> @weatherData.weather[0].main - @weatherData.weather[0].description</MudText>
+
+                <MudDivider Class="my-2" />
+
+                <MudGrid>
+                    <MudItem xs="6">
+                        <MudText>Temp:</MudText>
+                        <MudText Typo="Typo.h6">@weatherData.main.temp °C</MudText>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudText> Humidity:</MudText>
+                        <MudText Typo="Typo.h6">@weatherData.main.humidity %</MudText>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudText> Wind Speed:</MudText>
+                        <MudText Typo="Typo.h6">@weatherData.wind.speed m/s</MudText>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudText> Pressure:</MudText>
+                        <MudText Typo="Typo.h6">@weatherData.main.pressure hPa</MudText>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudText> Sunrise:</MudText>
+                        <MudText Typo="Typo.h6">@GetTime(weatherData.sys.sunrise)</MudText>
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudText> Sunset:</MudText>
+                        <MudText Typo="Typo.h6">@GetTime(weatherData.sys.sunset)</MudText>
+                    </MudItem>
+                </MudGrid>
+            </MudPaper>
+        }
+
+        @if (forecastData != null)
+        {
+            <MudPaper Class="mt-4 pa-4 mud-paper" Elevation="4">
+                <MudText Typo="Typo.h6">5-Day Forecast</MudText>
+                <MudDivider Class="mb-2" />
+
+                <MudGrid>
+                    @foreach (var item in forecastData.list.Where((x, i) => i % 8 == 0).Take(5))
+                    {
+                        <MudItem xs="12" sm="6" md="4">
+                            <MudPaper Class="pa-3 mb-2 forecast-card" Elevation="2">
+                                <MudText Typo="Typo.subtitle2">
+                                    @DateTimeOffset.FromUnixTimeSeconds(item.Dt).ToLocalTime().ToString("dddd, hh tt")
+                                </MudText>
+                                <MudText>Temp: @item.Main.Temp °C</MudText>
+                                <MudText>@item.Weather[0].Main - @item.Weather[0].Description</MudText>
+                                <MudText>Wind: @item.Wind.Speed m/s</MudText>
+                            </MudPaper>
+                        </MudItem>
+                    }
+                </MudGrid>
+            </MudPaper>
+        }
+        @if (searchHistory != null && searchHistory.Count > 0)
+        {
+            <MudPaper Class="mt-4 pa-4" Elevation="2">
+                <MudText Typo="Typo.h6">Recent Searches</MudText>
+                <MudDivider Class="mb-2" />
+
+                @foreach (var history in searchHistory)
+                {
+                    <MudText>- @history.City (@history.WeatherSummary) on @history.SearchedAt.ToLocalTime().ToString("g")</MudText>
+                }
+            </MudPaper>
+        }
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private string city = string.Empty;
+    private WeatherResponse? weatherData;
+    private ForecastResponse? forecastData;
+    private bool isLoading = false;
+    private string? errorMessage;
+    private List<SearchHistory>? searchHistory;
+    private bool _firstRender = true;
+
+     protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _firstRender = false;
+
+            try
+            {
+                var currentUser = await UserService.GetCurrentUserAsync();
+                if (currentUser != null)
+                {
+                    // You can now safely use sessionStorage here
+                    Console.WriteLine("User logged in: " + currentUser.Email);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Failed to get user from session: " + ex.Message);
+            }
+
+            StateHasChanged(); // Trigger re-render if needed
+        }
+    }
+
+    private async Task SearchWeather()
+    {
+        isLoading = true;
+        errorMessage = null;
+        weatherData = null;
+        forecastData = null;
+
+        try
+        {
+            weatherData = await WSService.GetWeatherAsync(city);
+            forecastData = await WSService.GetForecastAsync(city);
+
+            if (weatherData == null)
+            {
+                errorMessage = $"Weather not found for '{city}'";
+            }
+            else
+            {
+                var currentUser = await UserService.GetCurrentUserAsync(); 
+                if (currentUser != null)
+            {
+                await SearchService.AddSearchAsync(new SearchHistory
+                {
+                    Email = currentUser.Email, 
+                    City = city,
+                    SearchedAt = DateTime.UtcNow,
+                    WeatherSummary = weatherData.weather[0].main 
+                });
+
+                searchHistory = await SearchService.GetUserHistoryAsync(currentUser.Email);
+            }
+        }
+    }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error fetching weather: {ex.Message}";
+        }
+
+        isLoading = false;
+    }
+    private string GetTime(long unix)
+    {
+        return DateTimeOffset.FromUnixTimeSeconds(unix).ToLocalTime().ToString("hh:mm tt");
+    }
+}

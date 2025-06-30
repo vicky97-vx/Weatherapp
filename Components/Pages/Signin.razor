@@ -1,0 +1,99 @@
+@page "/signin"
+@using MudBlazor
+@using WRModel.Models
+@using WSService.Services
+@using static BCrypt.Net.BCrypt
+@using System.ComponentModel.DataAnnotations
+@rendermode InteractiveServer
+@inject MongoUserService UserService
+@inject NavigationManager Navigation
+
+<MudContainer MaxWidth="MaxWidth.ExtraSmall" Class="mt-10">
+    <MudPaper Class="pa-6" Elevation="6">
+        <MudText Typo="Typo.h5" Class="mb-4 text-center">Create an Account</MudText>
+
+        <EditForm Model="@signupModel" OnValidSubmit="@HandleSignup">
+            <MudForm @ref="form">
+                <MudTextField @bind-Value="signupModel.FullName" Label="Full Name" Variant="Variant.Filled"
+                              For="@(() => signupModel.FullName)" Required="true"
+                              Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Person"
+                              Class="mb-3" />
+
+                <MudTextField @bind-Value="signupModel.Email" Label="Email" Variant="Variant.Filled"
+                              For="@(() => signupModel.Email)" Required="true"
+                              Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Email"
+                              Class="mb-3" />
+
+                <MudTextField @bind-Value="signupModel.Password" Label="Password" Variant="Variant.Filled"
+                              InputType="InputType.Password"
+                              For="@(() => signupModel.Password)" Required="true"
+                              Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Lock"
+                              Class="mb-4" />
+
+                <MudTextField @bind-Value="signupModel.Password" Label="Confirm Password" Variant="Variant.Filled"
+                              InputType="InputType.Password"
+                              For="@(() => signupModel.Password)" Required="true"
+                              Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Lock"
+                              Class="mb-4" />
+
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SigninUser" class="mt-3 w-100">
+                    Sign Up
+                </MudButton>
+            </MudForm>
+        </EditForm>
+
+        <MudText Class="mt-4 text-center">
+            Already have an account?
+            <MudLink Href="/login">Login here</MudLink>
+        </MudText>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private MudForm? form;
+    private SignupModel signupModel = new();
+    private string email = "";
+    private string password = "";
+    
+    private async Task SigninUser()
+    {
+        var existing = await UserService.GetUserAsync(email);
+        if (existing != null)
+        {
+            
+            Console.WriteLine("User already exists.");
+            return;
+        }
+
+        var user = new UserModel
+        {
+            FullName = signupModel.FullName,
+            Email = signupModel.Email,
+            Password = HashPassword(signupModel.Password) 
+        };
+
+        await UserService.SigninUserAsync(user);
+        Navigation.NavigateTo("/");
+    }
+
+    private void HandleSignup()
+    {
+        Console.WriteLine($"✅ Signup Submitted: {signupModel.FullName}, {signupModel.Email}");
+        
+    }
+
+    public class SignupModel
+    {
+        [Required]
+        public string FullName { get; set; } = "";
+
+        [Required, EmailAddress]
+        public string Email { get; set; } = "";
+
+        [Required, MinLength(6)]
+        public string Password { get; set; } = "";
+
+        [Required, Compare(nameof(Password), ErrorMessage = "Passwords do not match")]
+        public string ConfirmPassword { get; set; } = "";
+    }
+}
