@@ -3,17 +3,24 @@
 @using WRModel.Models
 @using WSService.Services
 @using static BCrypt.Net.BCrypt
+@using Blazored.SessionStorage
+@using System.Text.Json
 @using System.ComponentModel.DataAnnotations
 @rendermode InteractiveServer
 @inject MongoUserService UserService
 @inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+@inject ISessionStorageService SessionStorage
 
 <MudContainer MaxWidth="MaxWidth.ExtraSmall" Class="mt-10">
     <MudPaper Class="pa-6" Elevation="6">
         <MudText Typo="Typo.h5" Class="mb-4 text-center">Create an Account</MudText>
 
-        <EditForm Model="@signupModel" OnValidSubmit="@HandleSignup">
+        <EditForm Model="@signupModel" OnValidSubmit="@SigninUser">
+            <DataAnnotationsValidator />
+
             <MudForm @ref="form">
+
                 <MudTextField @bind-Value="signupModel.FullName" Label="Full Name" Variant="Variant.Filled"
                               For="@(() => signupModel.FullName)" Required="true"
                               Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Person"
@@ -30,9 +37,9 @@
                               Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Lock"
                               Class="mb-4" />
 
-                <MudTextField @bind-Value="signupModel.Password" Label="Confirm Password" Variant="Variant.Filled"
+                <MudTextField @bind-Value="signupModel.ConfirmPassword" Label="Confirm Password" Variant="Variant.Filled"
                               InputType="InputType.Password"
-                              For="@(() => signupModel.Password)" Required="true"
+                              For="@(() => signupModel.ConfirmPassword)" Required="true"
                               Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Lock"
                               Class="mb-4" />
 
@@ -52,48 +59,63 @@
 @code {
     private MudForm? form;
     private SignupModel signupModel = new();
-    private string email = "";
-    private string password = "";
+    private string errorMessage = "";
+    private bool showError = false;
+
     
     private async Task SigninUser()
     {
-        var existing = await UserService.GetUserAsync(email);
-        if (existing != null)
+        if (form != null)
         {
-            
-            Console.WriteLine("User already exists.");
+            await form.Validate();
+            if (!form.IsValid)
+                return;
+        }
+
+        // Check if user already exists (optional but good practice)
+        var existingUser = await UserService.GetUserAsync(signupModel.Email);
+        if (existingUser != null)
+        {
+            Snackbar.Add("User already exists with this email.", Severity.Warning);
             return;
         }
 
-        var user = new UserModel
+        // Create new user object
+        var newUser = new UserModel
         {
             FullName = signupModel.FullName,
             Email = signupModel.Email,
-            Password = HashPassword(signupModel.Password) 
+            Password = BCrypt.Net.BCrypt.HashPassword(signupModel.Password) // Always hash!
         };
 
-        await UserService.SigninUserAsync(user);
+        // Save to DB
+        await UserService.AddUserAsync(newUser);
+
+        // Store in session
+        await SessionStorage.SetItemAsync("currentUser", JsonSerializer.Serialize(newUser));
+
+        Snackbar.Add("Signup successful!", Severity.Success);
+
+       
         Navigation.NavigateTo("/");
     }
 
-    private void HandleSignup()
-    {
-        Console.WriteLine($"✅ Signup Submitted: {signupModel.FullName}, {signupModel.Email}");
         
-    }
-
     public class SignupModel
     {
-        [Required]
+        [Required(ErrorMessage = "Full name is required")]
         public string FullName { get; set; } = "";
 
-        [Required, EmailAddress]
+        [Required(ErrorMessage = "EmailAddress") ]
+        [EmailAddress(ErrorMessage = "Invalid email format")]
         public string Email { get; set; } = "";
 
-        [Required, MinLength(6)]
+        [Required(ErrorMessage = "Password is required")]
+        [MinLength(6, ErrorMessage = "Password must be at least 6 characters")]
         public string Password { get; set; } = "";
 
-        [Required, Compare(nameof(Password), ErrorMessage = "Passwords do not match")]
+        [Required(ErrorMessage = "Confirm Password is required")]
+        [Compare(nameof(Password), ErrorMessage = "Passwords do not match")]
         public string ConfirmPassword { get; set; } = "";
     }
 }

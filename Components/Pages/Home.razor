@@ -2,29 +2,33 @@
 @using WRModel.Models
 @using WSService.Services
 @using MudBlazor
+@using System.Text.Json
 @rendermode InteractiveServer
 @inject WeatherService WSService
 @inject SearchHistoryService SearchService
 @inject MongoUserService UserService
+@inject ISnackbar Snackbar
+@inject Blazored.SessionStorage.ISessionStorageService SessionStorage
+@inject NavigationManager Navigation
 
 <PageTitle>Home</PageTitle>
 
-<MudAppBar Color="Color.Secondary" Fixed="true" Class="mud-appbar">
-    <MudText Typo="Typo.h4">WeatherApp</MudText>
-
+<MudAppBar Color="Color.Info" Class="mud-appbar">
+    <MudText Typo="Typo.h4"> WeatherApp</MudText>
     <MudSpacer />
-
-    <MudButton Link="/signin" Variant="Variant.Text" Color="Color.Inherit" Typo="Typo.h5">Signin</MudButton>
-    <MudButton Link="/login" Variant="Variant.Text" Color="Color.Inherit" Typo="Typo.h5">Login</MudButton>
+    <MudButton OnClick="@(() => Navigation.NavigateTo("/signin"))" Variant="Variant.Text" Color="Color.Dark">Signin</MudButton>
+    <MudButton OnClick="@(() => Navigation.NavigateTo("/login"))" Variant="Variant.Text" Color="Color.Dark">Login</MudButton>
 </MudAppBar>
 
-<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-6 mud-container">
-    <MudPaper Class="pa-4 mud-paper">
-        <MudTextField @bind-Value="city" Label="Enter City" Variant="Variant.Filled" Class="mb-3 mud-textfield" />
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-8 mud-container">
+    <MudPaper Class="pa-8 mud-paper" Style="background-color: transparent;">
+        <MudTextField @bind-Value="city"  Typo="Typo.h6" Label="Enter City" Variant="Variant.Filled" Class="mb-3 mud-textfield"  />
 
         <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SearchWeather">
             Get Weather
         </MudButton>
+    </MudPaper>
+</MudContainer>
 
         @if (isLoading)
         {
@@ -36,9 +40,10 @@
         }
         else if (weatherData != null)
         {
-            <MudPaper Class="mt-4 pa-4 mud-paper" Elevation="4">
+        <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-8 mud-container-1 d-flex justify-center custom-scroll" >
+            <MudContainer Class="mt-4 pa-4 mud-contains" Elevation="4">
                 <MudText Typo="Typo.h5">@weatherData.name, @weatherData.sys.country</MudText>
-                <MudText Typo="Typo.subtitle1"> @weatherData.weather[0].main - @weatherData.weather[0].description</MudText>
+                <MudText Typo="Typo.subtitle1">@weatherData.weather[0].main - @weatherData.weather[0].description</MudText>
 
                 <MudDivider Class="my-2" />
 
@@ -48,35 +53,36 @@
                         <MudText Typo="Typo.h6">@weatherData.main.temp °C</MudText>
                     </MudItem>
                     <MudItem xs="6">
-                        <MudText> Humidity:</MudText>
+                        <MudText>Humidity:</MudText>
                         <MudText Typo="Typo.h6">@weatherData.main.humidity %</MudText>
                     </MudItem>
                     <MudItem xs="6">
-                        <MudText> Wind Speed:</MudText>
+                        <MudText>Wind Speed:</MudText>
                         <MudText Typo="Typo.h6">@weatherData.wind.speed m/s</MudText>
                     </MudItem>
                     <MudItem xs="6">
-                        <MudText> Pressure:</MudText>
+                        <MudText>Pressure:</MudText>
                         <MudText Typo="Typo.h6">@weatherData.main.pressure hPa</MudText>
                     </MudItem>
                     <MudItem xs="6">
-                        <MudText> Sunrise:</MudText>
+                        <MudText>Sunrise:</MudText>
                         <MudText Typo="Typo.h6">@GetTime(weatherData.sys.sunrise)</MudText>
                     </MudItem>
                     <MudItem xs="6">
-                        <MudText> Sunset:</MudText>
+                        <MudText>Sunset:</MudText>
                         <MudText Typo="Typo.h6">@GetTime(weatherData.sys.sunset)</MudText>
                     </MudItem>
                 </MudGrid>
-            </MudPaper>
+            </MudContainer>
+        </MudContainer>
         }
 
         @if (forecastData != null)
         {
-            <MudPaper Class="mt-4 pa-4 mud-paper" Elevation="4">
-                <MudText Typo="Typo.h6">5-Day Forecast</MudText>
+        <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-8 mud-container-2 custom-scroll">
+            <MudContainer Class="mt-4 pa-4 forecast" Elevation="4">
+                <MudText Typo="Typo.h6" Align="Align.Center">5-Day Forecast</MudText>
                 <MudDivider Class="mb-2" />
-
                 <MudGrid>
                     @foreach (var item in forecastData.list.Where((x, i) => i % 8 == 0).Take(5))
                     {
@@ -92,22 +98,40 @@
                         </MudItem>
                     }
                 </MudGrid>
-            </MudPaper>
+            </MudContainer>
+        </MudContainer>
         }
+    
         @if (searchHistory != null && searchHistory.Count > 0)
         {
-            <MudPaper Class="mt-4 pa-4" Elevation="2">
+        <MudContainer MaxWidth="MaxWidth.Small" Class="mt-8 mud-container-3 custom-scroll">
+            <MudContainer Class="mt-4 pa-4 Search" Elevation="2">
                 <MudText Typo="Typo.h6">Recent Searches</MudText>
                 <MudDivider Class="mb-2" />
-
                 @foreach (var history in searchHistory)
                 {
                     <MudText>- @history.City (@history.WeatherSummary) on @history.SearchedAt.ToLocalTime().ToString("g")</MudText>
                 }
-            </MudPaper>
+            </MudContainer>
+        </MudContainer>    
         }
-    </MudPaper>
-</MudContainer>
+        
+        @if (weatherData != null)
+        {
+        <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-8 d-flex justify-center ">
+            <MudButton OnClick="() => AddToFavorites(city)" Color="Color.Secondary" Variant="Variant.Outlined">
+                Add to Favorites
+            </MudButton>
+
+            <MudSpacer /> 
+
+            <MudButton OnClick="() => RemoveFromFavorites(city)" Color="Color.Error" Variant="Variant.Outlined">
+                Remove from Favorites
+            </MudButton>
+        </MudContainer>
+        }
+
+   
 
 @code {
     private string city = string.Empty;
@@ -116,30 +140,11 @@
     private bool isLoading = false;
     private string? errorMessage;
     private List<SearchHistory>? searchHistory;
-    private bool _firstRender = true;
+    
 
-     protected override async Task OnAfterRenderAsync(bool firstRender)
+    private string GetTime(long unix)
     {
-        if (firstRender)
-        {
-            _firstRender = false;
-
-            try
-            {
-                var currentUser = await UserService.GetCurrentUserAsync();
-                if (currentUser != null)
-                {
-                    // You can now safely use sessionStorage here
-                    Console.WriteLine("User logged in: " + currentUser.Email);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Failed to get user from session: " + ex.Message);
-            }
-
-            StateHasChanged(); // Trigger re-render if needed
-        }
+        return DateTimeOffset.FromUnixTimeSeconds(unix).ToLocalTime().ToString("hh:mm tt");
     }
 
     private async Task SearchWeather()
@@ -160,21 +165,25 @@
             }
             else
             {
-                var currentUser = await UserService.GetCurrentUserAsync(); 
-                if (currentUser != null)
-            {
-                await SearchService.AddSearchAsync(new SearchHistory
+                var json = await SessionStorage.GetItemAsync<string>("currentUser");
+                if (!string.IsNullOrWhiteSpace(json))
                 {
-                    Email = currentUser.Email, 
-                    City = city,
-                    SearchedAt = DateTime.UtcNow,
-                    WeatherSummary = weatherData.weather[0].main 
-                });
+                    var currentUser = JsonSerializer.Deserialize<UserModel>(json);
+                    if (currentUser != null)
+                    {
+                        await SearchService.AddSearchAsync(new SearchHistory
+                        {
+                            Email = currentUser.Email,
+                            City = city,
+                            SearchedAt = DateTime.UtcNow,
+                            WeatherSummary = weatherData.weather[0].main
+                        });
 
-                searchHistory = await SearchService.GetUserHistoryAsync(currentUser.Email);
+                        searchHistory = await SearchService.GetUserHistoryAsync(currentUser.Email);
+                    }
+                }
             }
         }
-    }
         catch (Exception ex)
         {
             errorMessage = $"Error fetching weather: {ex.Message}";
@@ -182,8 +191,59 @@
 
         isLoading = false;
     }
-    private string GetTime(long unix)
+
+    private async Task AddToFavorites(string city)
     {
-        return DateTimeOffset.FromUnixTimeSeconds(unix).ToLocalTime().ToString("hh:mm tt");
+        var json = await SessionStorage.GetItemAsync<string>("currentUser");
+        var user = !string.IsNullOrWhiteSpace(json) ? JsonSerializer.Deserialize<UserModel>(json) : null;
+
+        if (user == null || string.IsNullOrWhiteSpace(city))
+            return;
+
+        if (!user.FavoriteCities.Contains(city))
+        {
+            await UserService.AddFavoriteAsync(user.Email, city);
+
+            var updatedUser = await UserService.GetUserAsync(user.Email);
+            if (updatedUser != null)
+            {
+                await SessionStorage.SetItemAsync("currentUser", JsonSerializer.Serialize(updatedUser));
+                Snackbar.Add($"{city} added to favorites!", Severity.Success);
+            }
+            else
+            {
+                Snackbar.Add("Error fetching updated user data.", Severity.Error);
+            }
+        }
+        else
+        {
+            Snackbar.Add($"{city} is already in favorites!", Severity.Info);
+        }
+    }
+
+    private async Task RemoveFromFavorites(string city)
+    {
+        var json = await SessionStorage.GetItemAsync<string>("currentUser");
+        var user = !string.IsNullOrWhiteSpace(json) ? JsonSerializer.Deserialize<UserModel>(json) : null;
+
+        if (user != null)
+        {
+            await UserService.RemoveFavoriteCityAsync(user.Email, city);
+
+            var updatedUser = await UserService.GetUserAsync(user.Email);
+            if (updatedUser != null)
+            {
+                await SessionStorage.SetItemAsync("currentUser", JsonSerializer.Serialize(updatedUser));
+            }
+
+            Snackbar.Add($"{city} removed from favorites", Severity.Info);
+        }
+    }
+
+    private async Task SearchWeatherFromFavorite(string favCity)
+    {
+        city = favCity;
+        await SearchWeather();
     }
 }
+

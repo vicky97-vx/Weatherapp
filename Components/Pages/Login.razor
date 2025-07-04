@@ -1,11 +1,17 @@
 @page "/login"
 @using MudBlazor
+@using System.Text.Json
 @using WSService.Services
 @using static BCrypt.Net.BCrypt
+@using System.ComponentModel.DataAnnotations
 @rendermode InteractiveServer
 @inject MongoUserService UserService
 @inject NavigationManager Navigation
-@using System.ComponentModel.DataAnnotations
+@inject ISnackbar Snackbar
+@* @inject AuthService AuthService *@
+@inject Blazored.SessionStorage.ISessionStorageService SessionStorage
+
+
 
 <MudContainer MaxWidth="MaxWidth.ExtraSmall" Class="mt-10">
     <MudPaper Class="pa-6" Elevation="6">
@@ -40,8 +46,9 @@
 @code {
     private MudForm? form;
     private LoginModel loginModel = new();
-    private string email = "";
-    private string password = "";
+    private string email = string.Empty;
+    private string password = string.Empty;
+    
 
     private void HandleLogin()
     {
@@ -51,19 +58,18 @@
 
      private async Task LoginUser()
     {
-        var user = await UserService.GetUserAsync(email);
-        if (user != null && Verify(password, user.Password))
+        var user = await UserService.LoginAsync(loginModel.Email, loginModel.Password);
+        if (user != null && Verify(loginModel.Password, user.Password))
         {
-            Console.WriteLine("Invalid login.");
-            return;
+            await SessionStorage.SetItemAsync("currentUser", JsonSerializer.Serialize(user));
+            Console.WriteLine($"✅ Login success for: {user.Email}");
+            Navigation.NavigateTo("/");
         }
         else
         {
-        Console.WriteLine("❌ Invalid credentials.");
+            Console.WriteLine("❌ Invalid credentials.");
+            Snackbar.Add("Invalid email or password", Severity.Error);
         }
-
-        
-        Navigation.NavigateTo("/");
     }
 
     public class LoginModel

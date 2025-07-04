@@ -13,8 +13,8 @@
       "PackagePath": "staticwebassets\\favicon.png"
     },
     {
-      "Id": "C:\\Users\\Admin\\OneDrive\\Documents\\Wisework\\Weatherapp\\wwwroot\\weather.css",
-      "PackagePath": "staticwebassets\\weather.css"
+      "Id": "C:\\Users\\Admin\\OneDrive\\Documents\\Wisework\\Weatherapp\\wwwroot\\weatherapp.css",
+      "PackagePath": "staticwebassets\\weatherapp.css"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.Weatherapp.Microsoft.AspNetCore.StaticWebAssets.props",

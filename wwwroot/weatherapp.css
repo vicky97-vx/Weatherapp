@@ -1,0 +1,138 @@
+*{
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    list-style: none;
+    scroll-behavior: smooth;
+    font-family:"Poppins";
+    box-sizing: border-box;
+}
+body {
+    background-image: url("https://images.pexels.com/photos/209831/pexels-photo-209831.jpeg?cs=srgb&dl=pexels-pixabay-209831.jpg&fm=jpg");
+    background-repeat: no-repeat;
+    background-size: cover; 
+    opacity: 70%;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.mud-appbar {
+    position: fixed;
+    margin-top: 1rem;
+    display: flex;
+    gap: 5rem;
+    border-radius: 40px;
+    padding: 0rem 2rem;
+    background: linear-gradient(to bottom, black,white);
+}
+
+.mud-paper{
+    border-radius: 10px;
+}
+
+.mud-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+}
+
+.mud-container-1,
+.mud-container-2,
+.mud-container-3,
+.mud-container-4 {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.mud-contains{
+    height: 350px;
+    background:linear-gradient( red,lightblue);
+    border-radius: 200px;
+    text-align: center;
+    transition: transform 0.5s ease;
+}
+
+.mud-contains:hover{
+    transform: scale(1.05);
+}
+
+.Search{
+    height: auto;
+    background:linear-gradient(to right,purple,blue) ;
+    border-radius: 50px; 
+    text-align: center;
+    font-weight: bolder;
+    color: black;
+    transition: transform 0.3s ease-in-out;
+}
+
+.Search:hover{
+    transform: scale(1.04);
+    
+}
+
+
+
+
+.mud-textfield input {
+    background-color: #f0f4f8 !important;
+    border-radius: 8px;
+}
+
+.forecast{
+  color: black;
+}
+
+.forecast-card {
+    border: 3px solid rebeccapurple;
+    font-weight: bolder;
+    border-radius: 10px;
+    transition: background-color 0.2s ease;
+    background: linear-gradient(lightblue);
+}
+
+.forecast-card:hover {
+    background:linear-gradient(yellow,white);
+}
+
+
+.mud-button {
+    border-radius: 8px !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.mud-button + .mud-button {
+    margin-left: 1rem;
+}
+
+
+.mud-progress-circular {
+    margin-top: 20px;
+    margin-left: 600px;
+}
+
+.mud-container-3 .mud-text {
+    font-size: 0.95rem;
+    color: #444;
+    margin-bottom: 4px;
+}
+
+.mud-alert{
+    margin-left: 550px;
+}
+
+
+@media (max-width: 768px) {
+    .mud-container-4 {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .mud-button + .mud-button {
+        margin-left: 0;
+        margin-top: 0.5rem;
+    }
+}

@@ -18,6 +18,8 @@ builder.Services.Configure<MongoDbSettings>(
     builder.Configuration.GetSection("MongoDbSettings"));
 builder.Services.AddScoped<MongoUserService>();
 
+// builder.Services.AddScoped<AuthService>();
+builder.Services.AddSingleton<SearchHistoryService>();
 builder.Services.AddScoped<SearchHistoryService>();
 builder.Services.AddMudServices();
 builder.Services.AddServerSideBlazor()
