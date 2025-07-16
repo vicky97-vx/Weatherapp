@@ -11,24 +11,43 @@
 @inject Blazored.SessionStorage.ISessionStorageService SessionStorage
 @inject NavigationManager Navigation
 
+
 <PageTitle>Home</PageTitle>
 
-<MudAppBar Color="Color.Info" Class="mud-appbar">
-    <MudText Typo="Typo.h4"> WeatherApp</MudText>
-    <MudSpacer />
-    <MudButton OnClick="@(() => Navigation.NavigateTo("/signin"))" Variant="Variant.Text" Color="Color.Dark">Signin</MudButton>
-    <MudButton OnClick="@(() => Navigation.NavigateTo("/login"))" Variant="Variant.Text" Color="Color.Dark">Login</MudButton>
+<MudAppBar Color="Color.Info" Class="mud-appbar mt-2 pa-3">
+    
+        <MudText Style="font-size: 35px;"> WeatherApp</MudText>
+        <MudSpacer />
+        <MudButton OnClick="@(() => Navigation.NavigateTo("/signin"))" Variant="Variant.Text"  Style="font-size: 20px;">Signin</MudButton>
+        <MudButton OnClick="@(() => Navigation.NavigateTo("/login"))" Variant="Variant.Text"  Style="font-size: 20px;">Login</MudButton>
 </MudAppBar>
 
-<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-8 mud-container">
-    <MudPaper Class="pa-8 mud-paper" Style="background-color: transparent;">
-        <MudTextField @bind-Value="city"  Typo="Typo.h6" Label="Enter City" Variant="Variant.Filled" Class="mb-3 mud-textfield"  />
-
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SearchWeather">
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
+    <MudContainer  Class="pa-20 app">
+        <MudText  Style="font-size: 3rem; font-weight: bold; color: red;" Align="Align.Center">
+            WeatherApp
+        </MudText><br/>
+        <MudText Style="font-size: 30px;" Align="Align.Center">
+            <span style="color: black">Weather forecasts, nowcasts and</span> 
+            <span style="color: orange"> history in a fast and elegant way</span>
+        </MudText>
+        
+        <MudTextField @bind-Value="city" Style="font-size: 2rem;" Label="Enter City" Variant="Variant.Outlined" Class="mb-3 mt-12 glass-box"  />
+        <MudButton Variant="Variant.Filled"  OnClick="SearchWeather" Class="button" Style="font-weight: bold; font-size: 20px;color: red;">
             Get Weather
         </MudButton>
-    </MudPaper>
+    </MudContainer>
 </MudContainer>
+
+        <div class="weather-video-section">
+            @if (!string.IsNullOrEmpty(CurrentVideoPath) && WeatherData?.Weather?.Count > 0)
+          {
+            <video autoplay loop muted playsinline class="weather-video">
+                <source src="@CurrentVideoPath" type="video/mp4" />
+            </video>
+          }
+        </div>
+
 
         @if (isLoading)
         {
@@ -38,48 +57,78 @@
         {
             <MudAlert Severity="Severity.Error" Class="mt-4">@errorMessage</MudAlert>
         }
-        else if (weatherData != null)
+        else if (WeatherData != null)
         {
-        <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-8 mud-container-1 d-flex justify-center custom-scroll" >
-            <MudContainer Class="mt-4 pa-4 mud-contains" Elevation="4">
-                <MudText Typo="Typo.h5">@weatherData.name, @weatherData.sys.country</MudText>
-                <MudText Typo="Typo.subtitle1">@weatherData.weather[0].main - @weatherData.weather[0].description</MudText>
+            <MudContainer Class="contain mt-10" >
+                <MudGrid GutterSize="3">
 
-                <MudDivider Class="my-2" />
+                            <MudItem xs="12" sm="2" md="2">
+                                <MudCard>
+                                    <MudCardContent Class="weather-card">
+                                        <MudText Typo="Typo.h6">Temperature</MudText>
+                                        <MudText Typo="Typo.h4" Color="Color.Primary">@WeatherData.Main.Temp &deg;C</MudText>
+                                        <MudIcon Icon="@Icons.Material.Filled.Thermostat" Size="Size.Medium" />    
+                                    </MudCardContent>    
+                                </MudCard>
+                            </MudItem>
 
-                <MudGrid>
-                    <MudItem xs="6">
-                        <MudText>Temp:</MudText>
-                        <MudText Typo="Typo.h6">@weatherData.main.temp °C</MudText>
+                    <MudItem xs="12" sm="2" md="2">
+                        <MudCard>
+                            <MudCardContent Class="humidit">
+                                <MudText Typo="Typo.h6">Humidity</MudText>
+                                <MudText Typo="Typo.h4" Color="Color.Primary">@WeatherData.Main.Humidity %</MudText>
+                                <MudIcon Icon="@Icons.Material.Filled.WaterDrop" Size="Size.Medium" />    
+                            </MudCardContent>
+                        </MudCard>
                     </MudItem>
-                    <MudItem xs="6">
-                        <MudText>Humidity:</MudText>
-                        <MudText Typo="Typo.h6">@weatherData.main.humidity %</MudText>
+
+                    <MudItem xs="12" sm="3" md="2">
+                        <MudCard>
+                            <MudCardContent Class="wind">
+                                <MudText Typo="Typo.h6">WindSpeed</MudText>
+                                <MudText Typo="Typo.h4" Color="Color.Primary">@WeatherData.Wind.Speed m/s</MudText>
+                                <MudIcon Icon="@Icons.Material.Filled.Air" Size="Size.Medium" />    
+                            </MudCardContent>
+                        </MudCard>
                     </MudItem>
-                    <MudItem xs="6">
-                        <MudText>Wind Speed:</MudText>
-                        <MudText Typo="Typo.h6">@weatherData.wind.speed m/s</MudText>
+
+                    <MudItem xs="12" sm="3" md="2">
+                        <MudCard>
+                            <MudCardContent Class="press">
+                                <MudText Typo="Typo.h6">Pressure</MudText>
+                                <MudText Typo="Typo.h4" Color="Color.Primary">@WeatherData.Main.Pressure hPa</MudText>
+                                <MudIcon Icon="@Icons.Material.Filled.Speed" Size="Size.Medium" />    
+                            </MudCardContent>
+                        </MudCard>
                     </MudItem>
-                    <MudItem xs="6">
-                        <MudText>Pressure:</MudText>
-                        <MudText Typo="Typo.h6">@weatherData.main.pressure hPa</MudText>
+
+                    <MudItem xs="12" sm="3" md="2">
+                        <MudCard>
+                            <MudCardContent Class="rise">
+                                <MudText Typo="Typo.h6">Sunrise</MudText>
+                                <MudText Typo="Typo.h4" Color="Color.Primary">@GetTime(WeatherData.Sys.Sunrise)</MudText>
+                                <MudIcon Icon="@Icons.Material.Filled.WbSunny" Size="Size.Medium" />    
+                            </MudCardContent>
+                        </MudCard>
                     </MudItem>
-                    <MudItem xs="6">
-                        <MudText>Sunrise:</MudText>
-                        <MudText Typo="Typo.h6">@GetTime(weatherData.sys.sunrise)</MudText>
-                    </MudItem>
-                    <MudItem xs="6">
-                        <MudText>Sunset:</MudText>
-                        <MudText Typo="Typo.h6">@GetTime(weatherData.sys.sunset)</MudText>
+
+                    <MudItem xs="12" sm="3" md="2">
+                        <MudCard Elevation="6">
+                            <MudCardContent Class="set">
+                                <MudText Typo="Typo.h6">Sunset</MudText>
+                                <MudText Typo="Typo.h4" Color="Color.Primary">@GetTime(WeatherData.Sys.Sunset)</MudText>
+                                <MudIcon Icon="@Icons.Material.Filled.NightlightRound" Size="Size.Medium" />    
+                            </MudCardContent>
+                        </MudCard>
                     </MudItem>
                 </MudGrid>
             </MudContainer>
-        </MudContainer>
-        }
+        }    
+    
 
         @if (forecastData != null)
         {
-        <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-8 mud-container-2 custom-scroll">
+        <MudContainer Class="mt-8 forecas">
             <MudContainer Class="mt-4 pa-4 forecast" Elevation="4">
                 <MudText Typo="Typo.h6" Align="Align.Center">5-Day Forecast</MudText>
                 <MudDivider Class="mb-2" />
@@ -102,46 +151,38 @@
         </MudContainer>
         }
     
-        @if (searchHistory != null && searchHistory.Count > 0)
-        {
-        <MudContainer MaxWidth="MaxWidth.Small" Class="mt-8 mud-container-3 custom-scroll">
-            <MudContainer Class="mt-4 pa-4 Search" Elevation="2">
-                <MudText Typo="Typo.h6">Recent Searches</MudText>
-                <MudDivider Class="mb-2" />
-                @foreach (var history in searchHistory)
-                {
-                    <MudText>- @history.City (@history.WeatherSummary) on @history.SearchedAt.ToLocalTime().ToString("g")</MudText>
-                }
-            </MudContainer>
-        </MudContainer>    
-        }
         
-        @if (weatherData != null)
-        {
-        <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-8 d-flex justify-center ">
-            <MudButton OnClick="() => AddToFavorites(city)" Color="Color.Secondary" Variant="Variant.Outlined">
-                Add to Favorites
-            </MudButton>
 
-            <MudSpacer /> 
-
-            <MudButton OnClick="() => RemoveFromFavorites(city)" Color="Color.Error" Variant="Variant.Outlined">
-                Remove from Favorites
-            </MudButton>
-        </MudContainer>
+        @if (searchHistory != null && searchHistory.Count > 0) 
+        {   
+            <MudContainer MaxWidth="MaxWidth.Small" Class="mt-8">
+                <MudContainer Class="mt-4 pa-4 Search" Elevation="2">
+                    <MudText Typo="Typo.h6">Recent Searches</MudText>
+                    <MudDivider Class="mb-2" />
+                    @foreach (var history in searchHistory)
+                    {
+                        <MudText>- @history.City (@history.WeatherSummary) on @history.SearchedAt.ToLocalTime().ToString("g")</MudText>
+                    }
+                </MudContainer>           
+            </MudContainer>    
         }
-
+                
+        
+        
    
 
 @code {
-    private string city = string.Empty;
-    private WeatherResponse? weatherData;
+    private string city = "";
+    private WeatherResponse? WeatherData;
     private ForecastResponse? forecastData;
     private bool isLoading = false;
     private string? errorMessage;
     private List<SearchHistory>? searchHistory;
+    private string CurrentVideoPath = "";
+    private string CurrentCondition = "";
     
-
+        
+    
     private string GetTime(long unix)
     {
         return DateTimeOffset.FromUnixTimeSeconds(unix).ToLocalTime().ToString("hh:mm tt");
@@ -151,15 +192,15 @@
     {
         isLoading = true;
         errorMessage = null;
-        weatherData = null;
+        WeatherData = null;
         forecastData = null;
 
         try
         {
-            weatherData = await WSService.GetWeatherAsync(city);
+            WeatherData = await WSService.GetWeatherAsync(city);
             forecastData = await WSService.GetForecastAsync(city);
 
-            if (weatherData == null)
+            if (WeatherData == null)
             {
                 errorMessage = $"Weather not found for '{city}'";
             }
@@ -176,13 +217,16 @@
                             Email = currentUser.Email,
                             City = city,
                             SearchedAt = DateTime.UtcNow,
-                            WeatherSummary = weatherData.weather[0].main
+                            WeatherSummary = WeatherData.Weather[0].Main
                         });
 
                         searchHistory = await SearchService.GetUserHistoryAsync(currentUser.Email);
                     }
                 }
+
+                await LoadWeatherAsync(city);
             }
+
         }
         catch (Exception ex)
         {
@@ -192,58 +236,36 @@
         isLoading = false;
     }
 
-    private async Task AddToFavorites(string city)
+    private async Task LoadWeatherAsync(string city)
     {
-        var json = await SessionStorage.GetItemAsync<string>("currentUser");
-        var user = !string.IsNullOrWhiteSpace(json) ? JsonSerializer.Deserialize<UserModel>(json) : null;
-
-        if (user == null || string.IsNullOrWhiteSpace(city))
-            return;
-
-        if (!user.FavoriteCities.Contains(city))
+        if (WeatherData == null)
         {
-            await UserService.AddFavoriteAsync(user.Email, city);
-
-            var updatedUser = await UserService.GetUserAsync(user.Email);
-            if (updatedUser != null)
-            {
-                await SessionStorage.SetItemAsync("currentUser", JsonSerializer.Serialize(updatedUser));
-                Snackbar.Add($"{city} added to favorites!", Severity.Success);
-            }
-            else
-            {
-                Snackbar.Add("Error fetching updated user data.", Severity.Error);
-            }
+        WeatherData = await WSService.GetWeatherAsync(city);
         }
-        else
+
+        if (WeatherData?.Weather?.Count > 0)
         {
-            Snackbar.Add($"{city} is already in favorites!", Severity.Info);
+            string condition = WeatherData.Weather[0].Main;
+            CurrentVideoPath = GetVideoForCondition(condition);
+            Console.WriteLine($"Video path for '{condition}': {CurrentVideoPath}");
+        }
+    else
+        {
+            CurrentVideoPath = string.Empty;
         }
     }
 
-    private async Task RemoveFromFavorites(string city)
+    
+    private string GetVideoForCondition(string condition) => condition switch
     {
-        var json = await SessionStorage.GetItemAsync<string>("currentUser");
-        var user = !string.IsNullOrWhiteSpace(json) ? JsonSerializer.Deserialize<UserModel>(json) : null;
+        "Rain" => "/videos/Rainy.mp4",
+        "Snow" => "/videos/Snow.mp4",
+        "ThunderStorm" => "/videos/ThunderStorm.mp4",
+        "Clear" => "/videos/Clear.mp4",
+        "Clouds"   => "/videos/Clouds.mp4",
+        _=> string.Empty
+    };
 
-        if (user != null)
-        {
-            await UserService.RemoveFavoriteCityAsync(user.Email, city);
-
-            var updatedUser = await UserService.GetUserAsync(user.Email);
-            if (updatedUser != null)
-            {
-                await SessionStorage.SetItemAsync("currentUser", JsonSerializer.Serialize(updatedUser));
-            }
-
-            Snackbar.Add($"{city} removed from favorites", Severity.Info);
-        }
-    }
-
-    private async Task SearchWeatherFromFavorite(string favCity)
-    {
-        city = favCity;
-        await SearchWeather();
-    }
+    
+    
 }
-

@@ -1,31 +1,33 @@
-@inherits LayoutComponentBase
 @using MudBlazor
+@inherits LayoutComponentBase
+@inject NavigationManager Navigation
+@inject WSService.Services.ThemeService ThemeService
 
-<MudThemeProvider Theme="@MyTheme" />
 
-    <MudLayout>
-        <MudAppBar Color="Color.Primary" Elevation="4">
-            <MudText Typo="Typo.h6">Weather App</MudText>
-        </MudAppBar>
-
+<MudThemeProvider Theme="@ThemeService.CurrentTheme" />
+    <MudLayout>   
+        
         <MudMainContent>
             @Body
         </MudMainContent>
+        
+        <MudPopoverProvider />
+        <MudDialogProvider />
+        <MudSnackbarProvider />
     </MudLayout>
 
 @code {
-    private MudTheme MyTheme = new MudTheme
+    private bool _isDark;
+
+    protected override void OnInitialized()
     {
-        PaletteLight = new PaletteLight
-        {
-            Primary = "#1976d2",       // Blue
-            Secondary = "#ff9800",     // Orange
-            AppbarBackground = "#1565c0",
-            AppbarText = "#ffffff",
-            DrawerBackground = "#e3f2fd",
-            DrawerText = "#0d47a1",
-            Background = "#f5f5f5",
-            Surface = "#ffffff"
-        }
-    };
-}
+        _isDark = ThemeService.IsDarkMode;
+    }
+
+    private void ToggleTheme()
+    {
+        ThemeService.ToggleTheme();
+        _isDark = ThemeService.IsDarkMode;
+    }
+
+} 

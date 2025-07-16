@@ -13,6 +13,26 @@
       "PackagePath": "staticwebassets\\favicon.png"
     },
     {
+      "Id": "C:\\Users\\Admin\\OneDrive\\Documents\\Wisework\\Weatherapp\\wwwroot\\videos\\Clear.mp4",
+      "PackagePath": "staticwebassets\\videos\\Clear.mp4"
+    },
+    {
+      "Id": "C:\\Users\\Admin\\OneDrive\\Documents\\Wisework\\Weatherapp\\wwwroot\\videos\\Clouds.mp4",
+      "PackagePath": "staticwebassets\\videos\\Clouds.mp4"
+    },
+    {
+      "Id": "C:\\Users\\Admin\\OneDrive\\Documents\\Wisework\\Weatherapp\\wwwroot\\videos\\Rainy.mp4",
+      "PackagePath": "staticwebassets\\videos\\Rainy.mp4"
+    },
+    {
+      "Id": "C:\\Users\\Admin\\OneDrive\\Documents\\Wisework\\Weatherapp\\wwwroot\\videos\\Snow.mp4",
+      "PackagePath": "staticwebassets\\videos\\Snow.mp4"
+    },
+    {
+      "Id": "C:\\Users\\Admin\\OneDrive\\Documents\\Wisework\\Weatherapp\\wwwroot\\videos\\ThunderStorm.mp4",
+      "PackagePath": "staticwebassets\\videos\\ThunderStorm.mp4"
+    },
+    {
       "Id": "C:\\Users\\Admin\\OneDrive\\Documents\\Wisework\\Weatherapp\\wwwroot\\weatherapp.css",
       "PackagePath": "staticwebassets\\weatherapp.css"
     },

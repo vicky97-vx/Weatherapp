@@ -2,6 +2,8 @@ using WRModel.Models;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
+
 
 namespace WRModel.Models
 { 
@@ -9,6 +11,7 @@ namespace WRModel.Models
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
+     
         public string? Id { get; set; }
 
         public string FullName {get; set;} = string.Empty;

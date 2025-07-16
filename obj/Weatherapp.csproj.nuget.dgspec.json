@@ -57,6 +57,10 @@
             },
             "MudBlazor": {
               "target": "Package",
+              "version": "[8.9.0, )"
+            },
+            "MudBlazor.Extensions": {
+              "target": "Package",
               "version": "[8.8.0, )"
             }
           },

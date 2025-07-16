@@ -1,138 +1,158 @@
-*{
+* {
     margin: 0;
     padding: 0;
-    text-decoration: none;
-    list-style: none;
-    scroll-behavior: smooth;
-    font-family:"Poppins";
     box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+    scroll-behavior: smooth;
 }
-body {
-    background-image: url("https://images.pexels.com/photos/209831/pexels-photo-209831.jpeg?cs=srgb&dl=pexels-pixabay-209831.jpg&fm=jpg");
-    background-repeat: no-repeat;
-    background-size: cover; 
-    opacity: 70%;
-    font-family: 'Times New Roman', Times, serif;
+
+
+.weather-video-section {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -2;
+    overflow: hidden;
 }
+
+.weather-video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: -2;
+}
+
 
 .mud-appbar {
     position: fixed;
-    margin-top: 1rem;
-    display: flex;
-    gap: 5rem;
-    border-radius: 40px;
-    padding: 0rem 2rem;
-    background: linear-gradient(to bottom, black,white);
+    width: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 0 0 20px 20px;
+    z-index: 10;
+    /* padding: 1rem 2rem; */
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
 }
 
-.mud-paper{
-    border-radius: 10px;
-}
 
-.mud-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem;
-}
-
-.mud-container-1,
-.mud-container-2,
-.mud-container-3,
-.mud-container-4 {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.mud-contains{
-    height: 350px;
-    background:linear-gradient( red,lightblue);
-    border-radius: 200px;
+/* Glass-style form container */
+.app {
+    margin-top: 4rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 3rem;
+    border-radius: 25px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
     text-align: center;
-    transition: transform 0.5s ease;
 }
 
-.mud-contains:hover{
-    transform: scale(1.05);
-}
-
-.Search{
-    height: auto;
-    background:linear-gradient(to right,purple,blue) ;
-    border-radius: 50px; 
-    text-align: center;
-    font-weight: bolder;
-    color: black;
-    transition: transform 0.3s ease-in-out;
-}
-
-.Search:hover{
-    transform: scale(1.04);
-    
+/* Input and Button styles */
+.glass-box, .button {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 12px;
+    border-radius: 15px;
+    color: #333;
 }
 
 
 
-
-.mud-textfield input {
-    background-color: #f0f4f8 !important;
-    border-radius: 8px;
-}
-
-.forecast{
-  color: black;
+/* Forecast section */
+.forecas, .forecast {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 1rem;
+    color: #111;
+    box-shadow: 0 0 15px rgba(0,0,0,0.15);
 }
 
 .forecast-card {
-    border: 3px solid rebeccapurple;
-    font-weight: bolder;
-    border-radius: 10px;
-    transition: background-color 0.2s ease;
-    background: linear-gradient(lightblue);
+    background: rgba(255,255,255,0.4);
+    border-radius: 15px;
+    padding: 1rem;
+    transition: transform 0.2s ease;
 }
 
 .forecast-card:hover {
-    background:linear-gradient(yellow,white);
+    transform: scale(1.03);
+    background: rgba(255, 255, 255, 0.6);
 }
 
+/* Cards for Weather Info */
+.weather-card, .humidit, .wind, .press, .rise, .set {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    padding: 1rem;
+    text-align: center;
+    color: #111;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
+}
+
+
+/* Button layout */
+.fav {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
 
 .mud-button {
-    border-radius: 8px !important;
-    font-weight: 600;
+    border-radius: 10px;
+    font-weight: bold;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    padding: 0.75rem 1.5rem;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
-.mud-button + .mud-button {
-    margin-left: 1rem;
+.Search {
+    background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+    color: black;
+    border-radius: 30px;
+    padding: 1rem;
+    text-align: center;
+    font-weight: 600;
+    transition: transform 0.3s ease;
 }
 
-
-.mud-progress-circular {
-    margin-top: 20px;
-    margin-left: 600px;
+.Search:hover {
+    transform: scale(1.03);
 }
 
-.mud-container-3 .mud-text {
-    font-size: 0.95rem;
-    color: #444;
-    margin-bottom: 4px;
-}
-
-.mud-alert{
+.mud-alert, .mud-progress-circular {
+    margin: 1rem auto;
     margin-left: 550px;
+    width: 20%;
+
 }
 
-
+/* Responsive improvements */
 @media (max-width: 768px) {
-    .mud-container-4 {
+    .app {
+        padding: 1.5rem;
+    }
+
+    .mud-appbar {
         flex-direction: column;
+        gap: 1rem;
         align-items: center;
     }
 
-    .mud-button + .mud-button {
+    .fav {
+        flex-direction: column;
+    }
+
+    .mud-progress-circular {
         margin-left: 0;
-        margin-top: 0.5rem;
     }
 }

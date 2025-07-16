@@ -8,33 +8,37 @@
 @inject MongoUserService UserService
 @inject NavigationManager Navigation
 @inject ISnackbar Snackbar
-@* @inject AuthService AuthService *@
 @inject Blazored.SessionStorage.ISessionStorageService SessionStorage
 
 
 
-<MudContainer MaxWidth="MaxWidth.ExtraSmall" Class="mt-10">
+<MudContainer MaxWidth="MaxWidth.ExtraSmall" Class="mt-10 mudsize">
     <MudPaper Class="pa-6" Elevation="6">
-        <MudText Typo="Typo.h5" Class="mb-4 text-center">Login to Your Account</MudText>
+        <MudText Typo="Typo.h5" Class="mb-4 text-center" Style="font-size: 30px">
+        <span style="color: blue">Login to</span>
+        <span style="color: red">Your Account</span>
+        </MudText>
 
-        <EditForm Model="@loginModel" OnValidSubmit="@HandleLogin">
-            <MudForm @ref="form">
+        
+            <MudForm Model="@loginModel" @ref="form">
                 <MudTextField @bind-Value="loginModel.Email" Label="Email" Variant="Variant.Filled"
                               For="@(() => loginModel.Email)" Required="true"
+                              RequiredError="Email is required"
                               Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Email"
                               Class="mb-3" />
 
                 <MudTextField @bind-Value="loginModel.Password" Label="Password" Variant="Variant.Filled"
                               InputType="InputType.Password"
                               For="@(() => loginModel.Password)" Required="true"
+                              RequiredError="Password is required"
                               Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Lock"
                               Class="mb-4" />
 
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="LoginUser" Class="mt-3 w-100">
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="LoginUser" Class="mt-3 w-100 log" Style="font-weight: bolder; font-size: 25px; color: white;">
                     Login
                 </MudButton>
             </MudForm>
-        </EditForm>
+        
 
         <MudText Class="mt-4 text-center">
             Don't have an account?
@@ -46,38 +50,38 @@
 @code {
     private MudForm? form;
     private LoginModel loginModel = new();
-    private string email = string.Empty;
-    private string password = string.Empty;
+    
     
 
-    private void HandleLogin()
+    private async Task LoginUser()
     {
-        Console.WriteLine($"🔐 Login Attempt: {loginModel.Email}");
-       
-    }
+       await form.Validate();
 
-     private async Task LoginUser()
-    {
+       if (!form.IsValid)
+       {
+            Snackbar.Add("Please fix the validation errors", Severity.Error);
+            return;
+       }
+       
         var user = await UserService.LoginAsync(loginModel.Email, loginModel.Password);
         if (user != null && Verify(loginModel.Password, user.Password))
         {
             await SessionStorage.SetItemAsync("currentUser", JsonSerializer.Serialize(user));
-            Console.WriteLine($"✅ Login success for: {user.Email}");
             Navigation.NavigateTo("/");
         }
         else
         {
-            Console.WriteLine("❌ Invalid credentials.");
             Snackbar.Add("Invalid email or password", Severity.Error);
         }
     }
 
     public class LoginModel
     {
-        [Required, EmailAddress]
+        [Required(ErrorMessage = "Email is required")]
+        [EmailAddress(ErrorMessage = "Invalid email format")]
         public string Email { get; set; } = "";
 
-        [Required]
+        [Required(ErrorMessage = "Password is Required")]
         public string Password { get; set; } = "";
     }
 }

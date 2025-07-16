@@ -7,21 +7,20 @@ using Blazored.SessionStorage;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.Configure<MongoDbSettings>(
+    builder.Configuration.GetSection("MongoDbSettings"));
 
-builder.Services.AddHttpClient<WeatherService>();
+builder.Services.AddScoped<MongoUserService>();
 builder.Services.AddBlazoredSessionStorage();
+builder.Services.AddHttpClient<WeatherService>();
+builder.Services.AddScoped<ThemeService>();
+builder.Services.AddScoped<SearchHistoryService>();
 
+builder.Services.AddMudServices();
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-builder.Services.Configure<MongoDbSettings>(
-    builder.Configuration.GetSection("MongoDbSettings"));
-builder.Services.AddScoped<MongoUserService>();
 
-// builder.Services.AddScoped<AuthService>();
-builder.Services.AddSingleton<SearchHistoryService>();
-builder.Services.AddScoped<SearchHistoryService>();
-builder.Services.AddMudServices();
 builder.Services.AddServerSideBlazor()
     .AddCircuitOptions(options => { options.DetailedErrors = true; });
 

@@ -12,14 +12,14 @@
 @inject ISnackbar Snackbar
 @inject ISessionStorageService SessionStorage
 
-<MudContainer MaxWidth="MaxWidth.ExtraSmall" Class="mt-10">
+<MudContainer MaxWidth="MaxWidth.ExtraSmall" Class="mt-10 container">
     <MudPaper Class="pa-6" Elevation="6">
-        <MudText Typo="Typo.h5" Class="mb-4 text-center">Create an Account</MudText>
+        <MudText Typo="Typo.h5" Class="mb-4 text-center" Style="font-size: 30px;">
+        <span style="color:blue">Create an</span>
+        <span style="color:violet">Account</span>
+        </MudText>
 
-        <EditForm Model="@signupModel" OnValidSubmit="@SigninUser">
-            <DataAnnotationsValidator />
-
-            <MudForm @ref="form">
+            <MudForm Model="@signupModel" @ref="form">
 
                 <MudTextField @bind-Value="signupModel.FullName" Label="Full Name" Variant="Variant.Filled"
                               For="@(() => signupModel.FullName)" Required="true"
@@ -43,11 +43,10 @@
                               Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Lock"
                               Class="mb-4" />
 
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SigninUser" class="mt-3 w-100">
-                    Sign Up
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="SigninUser" class="mt-3 w-100 buttin" Style="font-weight: bolder; font-size: 25px; color: white;">
+                    Sign in
                 </MudButton>
             </MudForm>
-        </EditForm>
 
         <MudText Class="mt-4 text-center">
             Already have an account?
@@ -106,7 +105,7 @@
         [Required(ErrorMessage = "Full name is required")]
         public string FullName { get; set; } = "";
 
-        [Required(ErrorMessage = "EmailAddress") ]
+        [Required(ErrorMessage = "Email is Required") ]
         [EmailAddress(ErrorMessage = "Invalid email format")]
         public string Email { get; set; } = "";
 
