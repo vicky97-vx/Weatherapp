@@ -16,12 +16,14 @@ namespace WRModel.Models
         public string? userId { get; set; }
 
         public string Email { get; set; } = "";
-        
+
         public string City { get; set; } = "";
-        
+
         public DateTime SearchedAt { get; set; } = DateTime.UtcNow;
+
+        public string WeatherSummary { get; set; }
         
-        public string WeatherSummary { get; set; } 
+         
 
     }
 }

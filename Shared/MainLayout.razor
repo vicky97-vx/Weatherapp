@@ -1,12 +1,28 @@
 @using MudBlazor
+@using WSService.Services
+@using Microsoft.AspNetCore.Components.Routing
+
+
 @inherits LayoutComponentBase
-@inject NavigationManager Navigation
+@inject NavigationManager NavManager
 @inject WSService.Services.ThemeService ThemeService
+@inject Blazored.SessionStorage.ISessionStorageService SessionStorage
 
 
-<MudThemeProvider Theme="@ThemeService.CurrentTheme" />
-    <MudLayout>   
-        
+<MudThemeProvider />
+    <MudLayout> 
+        @* <MudAppBar Color="Color.Primary">
+            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="ToggleSidebar" />
+            <MudText Typo="Typo.h6" Class="ml-2">WEATHERAPP</MudText>
+        </MudAppBar >  *@
+
+        @* <MudDrawer @bind-Open="@isSidebarOpen" Variant="DrawerVariant.Temporary">
+            <MudNavMenu>
+                <MudNavLink Href="/" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+                <MudNavLink Href="/profile" Icon="@Icons.Material.Filled.Person">Profile</MudNavLink>
+            </MudNavMenu>
+        </MudDrawer> *@
+
         <MudMainContent>
             @Body
         </MudMainContent>
@@ -16,18 +32,17 @@
         <MudSnackbarProvider />
     </MudLayout>
 
+
 @code {
-    private bool _isDark;
+    private bool isSidebarOpen = false;
 
-    protected override void OnInitialized()
+    private void CloseSidebar() => isSidebarOpen = false;
+
+    
+    
+
+    private void ToggleSidebar()
     {
-        _isDark = ThemeService.IsDarkMode;
+        isSidebarOpen = !isSidebarOpen;
     }
-
-    private void ToggleTheme()
-    {
-        ThemeService.ToggleTheme();
-        _isDark = ThemeService.IsDarkMode;
-    }
-
 } 

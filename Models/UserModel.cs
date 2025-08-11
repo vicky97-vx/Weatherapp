@@ -13,14 +13,19 @@ namespace WRModel.Models
         [BsonRepresentation(BsonType.ObjectId)]
      
         public string? Id { get; set; }
-
+        
+        [BsonElement("FullName")]
         public string FullName {get; set;} = string.Empty;
 
+        [BsonElement("UserName")]
+        public string UserName { get; set; } = string.Empty;
+
+        [BsonElement("Email")]
         public string Email { get; set; } = string.Empty;
 
-        public string Password { get; set; } = string.Empty; 
+        [BsonElement("Password")]
+        public string Password { get; set; } = string.Empty;
 
-       
 
         [BsonElement("FavoriteCities")]
         public List<string> FavoriteCities { get; set; } = new();

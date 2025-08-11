@@ -21,10 +21,11 @@ namespace WSService.Services
             await _searchHistoryCollection.InsertOneAsync(search);
         }
 
-        public async Task ClearSearchHistoryByEmailAsync(string email)
+        public async Task ClearUserHistoryAsync(string email)
         {
             var filter = Builders<SearchHistory>.Filter.Eq(h => h.Email, email);
             await _searchHistoryCollection.DeleteManyAsync(filter);
+    
         }
 
 

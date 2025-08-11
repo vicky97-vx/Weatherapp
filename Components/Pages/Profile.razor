@@ -1,0 +1,229 @@
+@page "/profile"
+@using WRModel.Models
+@using MudBlazor
+@using WSService.Services
+@using System.Text.Json
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+@inject Blazored.SessionStorage.ISessionStorageService SessionStorage
+@inject SearchHistoryService SearchService
+@inject MongoUserService UserService
+
+
+
+<MudAppBar Color="Color.Info" Class="mud-appbar">
+    <MudText Typo="Typo.h4"> WeatherApp</MudText>
+    <MudNavLink Href="/" Icon="@Icons.Material.Rounded.Home" Style="margin-left: 48rem;" />
+    <MudNavLink Href="/favoritecity" Icon="@Icons.Material.Rounded.Star" />
+    <MudNavLink Href="/profile" Icon="@Icons.Material.Rounded.Person" />
+    <MudNavLink Href="/settings" Icon="@Icons.Material.Rounded.Settings" />
+</MudAppBar>
+
+<MudGrid Class="mt-6" Justify="Justify.Center" GutterSize="3">
+    <!-- Profile Card -->
+    <MudItem xs="12" md="6">
+        <MudPaper Class="pa-6 rounded-card" Style="width: 50%; border-radius: 16px; margin-left: 12rem; margin-top: 2rem;" Elevation="2">
+            <MudText Typo="Typo.h5" Style="text-align: center;" GutterBottom>Profile</MudText>
+
+            @if (_renderComplete && user != null)
+            {
+                <MudForm @ref="_form" Model="@user" IsValidChanged="OnValidChanged">
+                    <MudTextField Label="Name" @bind-Value="user.FullName" Required="true" Class="mb-2" />
+                    <MudTextField Label="Username" @bind-Value="user.UserName" Required="true" Class="mb-2" />
+                    <MudTextField Label="Email" @bind-Value="user.Email" Disabled="true" Required="true" Class="mb-2" />
+
+                    <MudStack Row="true" Spacing="2" Class="mt-4">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="UpdateProfile" Style="align-self: center;">
+                            Save Changes
+                        </MudButton>
+                    </MudStack>
+                </MudForm>
+
+                @if (!string.IsNullOrEmpty(profileUpdateMessage))
+                {
+                    <MudAlert Severity="@profileMessageSeverity" Dense="true" Class="mt-3">
+                        @profileUpdateMessage
+                    </MudAlert>
+                }
+            }
+            else
+            {
+                <MudText Color="Color.Error">User not found. Please login again.</MudText>
+            }
+        </MudPaper>
+    </MudItem>
+
+    <!-- Search History Card -->
+    <MudItem xs="12" md="6">
+        <MudPaper Class="pa-6 rounded-card" Style="background-color: #f9f9f9; border-radius: 16px; margin-right: 8rem;" Elevation="2">
+            <MudText Typo="Typo.h5" Style="text-align: center;" GutterBottom>Search History</MudText>
+
+            @if (userSearchHistory != null && userSearchHistory.Any())
+            {
+                <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-2">
+                    <MudText Typo="Typo.h6">Recent Searches</MudText>
+                    <MudButton Variant="Variant.Outlined" Color="Color.Error" Size="Size.Small" OnClick="ClearSearchHistoryAsync">
+                        <MudIcon Icon="@Icons.Material.Filled.DeleteForever" Class="mr-1" />
+                        Clear History
+                    </MudButton>
+                </MudStack>
+
+                <MudList T="SearchHistory" Dense="true">
+                    @foreach (var history in userSearchHistory.OrderByDescending(h => h.SearchedAt))
+                    {
+                        <MudListItem T="SearchHistory">
+                            <MudText><b>@history.City</b> - @history.SearchedAt.ToString("dd MMM yyyy, hh:mm tt")</MudText>
+                        </MudListItem>
+                    }
+                </MudList>
+            }
+            else
+            {
+                <MudText>You have no search history yet.</MudText>
+            }
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    private UserModel? user;
+    private MudForm? _form;
+    private bool _isValid;
+    private string profileUpdateMessage = string.Empty;
+    private Severity profileMessageSeverity = Severity.Success;
+    private bool _renderComplete = false;
+    private List<SearchHistory>? userSearchHistory;
+    private List<SearchHistory>? searchHistory;
+    private bool _hasCheckedSession = false;
+
+    private void OnValidChanged(bool valid)
+    {
+        _isValid = valid;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !_hasCheckedSession)
+        {
+            _hasCheckedSession = true;
+
+            try
+            {
+                var json = await SessionStorage.GetItemAsync<string>("currentUser");
+
+                if (!string.IsNullOrWhiteSpace(json))
+                {
+                    user = JsonSerializer.Deserialize<UserModel>(json);
+                    if (user != null)
+                    {
+                        userSearchHistory = await SearchService.GetUserHistoryAsync(user.Email);
+                    }
+                }
+
+                if (user == null)
+                {
+                    Navigation.NavigateTo("/login", forceLoad: true);
+                }
+            }
+            catch (JsonException)
+            {
+                await SessionStorage.RemoveItemAsync("currentUser");
+                Navigation.NavigateTo("/login", forceLoad: true);
+            }
+
+            _renderComplete = true;
+            StateHasChanged();
+        }
+    } 
+
+    @* protected override async Task OnInitializedAsync()
+{
+    try
+    {
+        var json = await SessionStorage.GetItemAsync<string>("currentUser");
+
+        if (!string.IsNullOrWhiteSpace(json))
+        {
+            user = JsonSerializer.Deserialize<UserModel>(json);
+            if (user != null)
+            {
+                userSearchHistory = await SearchService.GetUserHistoryAsync(user.Email);
+            }
+        }
+
+        if (user == null)
+        {
+            Snackbar.Add("Session expired or user not found. Please log in again.", Severity.Warning);
+            Navigation.NavigateTo("/login", forceLoad: true);
+        }
+    }
+    catch (JsonException)
+    {
+        await SessionStorage.RemoveItemAsync("currentUser");
+        Snackbar.Add("Session data was invalid. Please log in again.", Severity.Warning);
+        Navigation.NavigateTo("/login", forceLoad: true);
+    }
+}*@
+
+
+    private async Task UpdateProfile()
+    {
+        if (_form == null || user == null)
+            return;
+
+        await _form.Validate();
+
+        if (!_isValid)
+            return;
+
+        bool updated = await UserService.UpdateUserAsync(user);
+
+        if (updated)
+        {
+            try
+            {
+                var json = JsonSerializer.Serialize(user);
+                await SessionStorage.SetItemAsync("currentUser", json);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            profileUpdateMessage = "Profile updated successfully!";
+            profileMessageSeverity = Severity.Success;
+        }
+        else
+        {
+            profileUpdateMessage = "Profile update failed.";
+            profileMessageSeverity = Severity.Error;
+        }
+    }
+
+    private void GoToHome()
+    {
+        Navigation.NavigateTo("/");
+    }
+
+   private async Task ClearSearchHistoryAsync()
+    {
+        try
+        {
+            var json = await SessionStorage.GetItemAsync<string>("currentUser");
+            if (!string.IsNullOrWhiteSpace(json))
+            {
+                var user = JsonSerializer.Deserialize<UserModel>(json);
+                if (user != null)
+                {
+                    await SearchService.ClearUserHistoryAsync(user.Email);
+                    userSearchHistory = new List<SearchHistory>(); // Clear from UI
+                    
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error clearing search history: {ex.Message}");
+        }
+    }
+}

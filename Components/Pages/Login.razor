@@ -6,13 +6,14 @@
 @using System.ComponentModel.DataAnnotations
 @rendermode InteractiveServer
 @inject MongoUserService UserService
+@inject Userdata uData
 @inject NavigationManager Navigation
 @inject ISnackbar Snackbar
 @inject Blazored.SessionStorage.ISessionStorageService SessionStorage
 
 
 
-<MudContainer MaxWidth="MaxWidth.ExtraSmall" Class="mt-10 mudsize">
+<MudContainer MaxWidth="MaxWidth.ExtraSmall" Class="mt-10">
     <MudPaper Class="pa-6" Elevation="6">
         <MudText Typo="Typo.h5" Class="mb-4 text-center" Style="font-size: 30px">
         <span style="color: blue">Login to</span>
@@ -66,8 +67,9 @@
         var user = await UserService.LoginAsync(loginModel.Email, loginModel.Password);
         if (user != null && Verify(loginModel.Password, user.Password))
         {
-            await SessionStorage.SetItemAsync("currentUser", JsonSerializer.Serialize(user));
-            Navigation.NavigateTo("/");
+            await SessionStorage.SetItemAsync("currentUser", user);
+            uData.Email = loginModel.Email;
+            Navigation.NavigateTo("/", forceLoad: true);
         }
         else
         {

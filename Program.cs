@@ -5,25 +5,28 @@ using WSService.Services;
 using WRModel.Models;
 using Blazored.SessionStorage;
 
+
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<MongoDbSettings>(
     builder.Configuration.GetSection("MongoDbSettings"));
 
 builder.Services.AddScoped<MongoUserService>();
-builder.Services.AddBlazoredSessionStorage();
+
+
 builder.Services.AddHttpClient<WeatherService>();
 builder.Services.AddScoped<ThemeService>();
 builder.Services.AddScoped<SearchHistoryService>();
-
+builder.Services.AddBlazoredSessionStorage();
 builder.Services.AddMudServices();
-
+builder.Services.AddSingleton<Userdata>();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddServerSideBlazor()
     .AddCircuitOptions(options => { options.DetailedErrors = true; });
-
 
 
 var app = builder.Build();
@@ -39,6 +42,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAntiforgery();
+
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();

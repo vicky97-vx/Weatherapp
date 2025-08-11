@@ -16,7 +16,7 @@ namespace WSService.Services
             _apiKey = config["OpenWeather:ApiKey"];
         }
 
-        public async Task<WeatherResponse?> GetWeatherAsync(string city)
+        public async Task<WeatherData?> GetWeatherAsync(string city)
         {
             try
             {
@@ -30,7 +30,7 @@ namespace WSService.Services
                 }
 
                 var json = await response.Content.ReadAsStringAsync();
-                var weatherData = JsonSerializer.Deserialize<WeatherResponse>(json, new JsonSerializerOptions
+                var weatherData = JsonSerializer.Deserialize<WeatherData>(json, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });

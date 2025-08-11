@@ -609,7 +609,7 @@
           }
         }
       },
-      "MudBlazor/8.9.0": {
+      "MudBlazor/8.11.0": {
         "type": "package",
         "dependencies": {
           "Microsoft.AspNetCore.Components": "8.0.12",
@@ -2020,10 +2020,10 @@
         "packageIcon.png"
       ]
     },
-    "MudBlazor/8.9.0": {
-      "sha512": "KdjXMXiSvl6uNr+S2YDhGI1aX/TULMQejQSniMlp6QTss35NKFrJyrMAmN082HNvOObuKdnTtLpntJ7rM5Op/A==",
+    "MudBlazor/8.11.0": {
+      "sha512": "WeQTp5l7yYMxFrXlmI51bfIYv4LsFl/ClNruNdJBumG+ods1RkX61gFhlcv3XLmg4EMs5w6a+WqTWCwolYXg7A==",
       "type": "package",
-      "path": "mudblazor/8.9.0",
+      "path": "mudblazor/8.11.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -2041,7 +2041,7 @@
         "lib/net8.0/MudBlazor.xml",
         "lib/net9.0/MudBlazor.dll",
         "lib/net9.0/MudBlazor.xml",
-        "mudblazor.8.9.0.nupkg.sha512",
+        "mudblazor.8.11.0.nupkg.sha512",
         "mudblazor.nuspec",
         "staticwebassets/MudBlazor.min.css",
         "staticwebassets/MudBlazor.min.js"
@@ -3156,12 +3156,13 @@
       "BCrypt.Net-Next >= 4.0.3",
       "Blazored.SessionStorage >= 2.4.0",
       "MongoDB.Driver >= 3.4.0",
-      "MudBlazor >= 8.9.0",
+      "MudBlazor >= 8.11.0",
       "MudBlazor.Extensions >= 8.8.0"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Admin\\.nuget\\packages\\": {}
+    "C:\\Users\\Admin\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
@@ -3172,13 +3173,19 @@
       "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\Admin\\OneDrive\\Documents\\Wisework\\Weatherapp\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -3196,7 +3203,8 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net8.0": {
@@ -3216,7 +3224,7 @@
           },
           "MudBlazor": {
             "target": "Package",
-            "version": "[8.9.0, )"
+            "version": "[8.11.0, )"
           },
           "MudBlazor.Extensions": {
             "target": "Package",
@@ -3242,7 +3250,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.410/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.302/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

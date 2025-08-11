@@ -12,7 +12,7 @@
 @inject ISnackbar Snackbar
 @inject ISessionStorageService SessionStorage
 
-<MudContainer MaxWidth="MaxWidth.ExtraSmall" Class="mt-10 container">
+<MudContainer MaxWidth="MaxWidth.ExtraSmall" Class="container">
     <MudPaper Class="pa-6" Elevation="6">
         <MudText Typo="Typo.h5" Class="mb-4 text-center" Style="font-size: 30px;">
         <span style="color:blue">Create an</span>
@@ -72,7 +72,7 @@
         }
 
         // Check if user already exists (optional but good practice)
-        var existingUser = await UserService.GetUserAsync(signupModel.Email);
+        var existingUser = await UserService.GetUserByEmailAsync(signupModel.Email);
         if (existingUser != null)
         {
             Snackbar.Add("User already exists with this email.", Severity.Warning);
@@ -91,12 +91,14 @@
         await UserService.AddUserAsync(newUser);
 
         // Store in session
-        await SessionStorage.SetItemAsync("currentUser", JsonSerializer.Serialize(newUser));
+        await SessionStorage.SetItemAsync("currentUser", newUser);
+
+    
 
         Snackbar.Add("Signup successful!", Severity.Success);
 
        
-        Navigation.NavigateTo("/");
+        Navigation.NavigateTo("/" , forceLoad: true);
     }
 
         
@@ -117,4 +119,4 @@
         [Compare(nameof(Password), ErrorMessage = "Passwords do not match")]
         public string ConfirmPassword { get; set; } = "";
     }
-}
+} 

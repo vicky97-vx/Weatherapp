@@ -11,7 +11,7 @@
           "BCrypt.Net-Next": "4.0.3",
           "Blazored.SessionStorage": "2.4.0",
           "MongoDB.Driver": "3.4.0",
-          "MudBlazor": "8.9.0",
+          "MudBlazor": "8.11.0",
           "MudBlazor.Extensions": "8.8.0"
         },
         "runtime": {
@@ -367,7 +367,7 @@
           }
         }
       },
-      "MudBlazor/8.9.0": {
+      "MudBlazor/8.11.0": {
         "dependencies": {
           "Microsoft.AspNetCore.Components": "8.0.12",
           "Microsoft.AspNetCore.Components.Web": "8.0.12",
@@ -375,8 +375,8 @@
         },
         "runtime": {
           "lib/net8.0/MudBlazor.dll": {
-            "assemblyVersion": "8.9.0.0",
-            "fileVersion": "8.9.0.0"
+            "assemblyVersion": "8.11.0.0",
+            "fileVersion": "8.11.0.0"
           }
         }
       },
@@ -391,7 +391,7 @@
           "ExcelDataReader.DataSet": "3.7.0",
           "MetadataExtractor": "2.8.1",
           "Microsoft.Extensions.Hosting.Abstractions": "8.0.1",
-          "MudBlazor": "8.9.0",
+          "MudBlazor": "8.11.0",
           "MudBlazor.Markdown": "8.7.0",
           "Nextended.Blazor": "9.0.9",
           "Nextended.Core": "9.0.14",
@@ -409,7 +409,7 @@
       "MudBlazor.Markdown/8.7.0": {
         "dependencies": {
           "Markdig": "0.41.2",
-          "MudBlazor": "8.9.0"
+          "MudBlazor": "8.11.0"
         },
         "runtime": {
           "lib/net8.0/MudBlazor.Markdown.dll": {
@@ -839,12 +839,12 @@
       "path": "mongodb.driver/3.4.0",
       "hashPath": "mongodb.driver.3.4.0.nupkg.sha512"
     },
-    "MudBlazor/8.9.0": {
+    "MudBlazor/8.11.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-KdjXMXiSvl6uNr+S2YDhGI1aX/TULMQejQSniMlp6QTss35NKFrJyrMAmN082HNvOObuKdnTtLpntJ7rM5Op/A==",
-      "path": "mudblazor/8.9.0",
-      "hashPath": "mudblazor.8.9.0.nupkg.sha512"
+      "sha512": "sha512-WeQTp5l7yYMxFrXlmI51bfIYv4LsFl/ClNruNdJBumG+ods1RkX61gFhlcv3XLmg4EMs5w6a+WqTWCwolYXg7A==",
+      "path": "mudblazor/8.11.0",
+      "hashPath": "mudblazor.8.11.0.nupkg.sha512"
     },
     "MudBlazor.Extensions/8.8.0": {
       "type": "package",

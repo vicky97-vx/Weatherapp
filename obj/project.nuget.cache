@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "jSrr23ok8V0=",
+  "dgSpecHash": "aPM2z6YGJVA=",
   "success": true,
   "projectFilePath": "C:\\Users\\Admin\\OneDrive\\Documents\\Wisework\\Weatherapp\\Weatherapp.csproj",
   "expectedPackageFiles": [
@@ -41,7 +41,7 @@
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.win32.registry\\5.0.0\\microsoft.win32.registry.5.0.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\mongodb.bson\\3.4.0\\mongodb.bson.3.4.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\mongodb.driver\\3.4.0\\mongodb.driver.3.4.0.nupkg.sha512",
-    "C:\\Users\\Admin\\.nuget\\packages\\mudblazor\\8.9.0\\mudblazor.8.9.0.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\mudblazor\\8.11.0\\mudblazor.8.11.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\mudblazor.extensions\\8.8.0\\mudblazor.extensions.8.8.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\mudblazor.markdown\\8.7.0\\mudblazor.markdown.8.7.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",

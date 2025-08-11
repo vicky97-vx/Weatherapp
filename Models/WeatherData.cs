@@ -3,10 +3,10 @@ using System.Text.Json.Serialization;
 
 namespace WRModel.Models
 {
-    public class WeatherResponse
+    public class WeatherData
     {
         public Main Main { get; set; }
-        public List<Weather> Weather { get; set; }
+        public List<Weather> weather { get; set; }
         public Wind Wind { get; set; }
         public Sys Sys { get; set; }
         public string Name { get; set; }
@@ -14,7 +14,7 @@ namespace WRModel.Models
 
     public class Main
     {
-        public float Temp { get; set; }
+        public double Temp { get; set; }
         public int Humidity { get; set; }
         public int Pressure { get; set; }
     }

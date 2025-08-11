@@ -1,0 +1,134 @@
+@page "/favoritecity"
+@using WRModel.Models
+@using WSService.Services
+@using System.Text.Json
+@inject NavigationManager Navigation
+@inject Userdata uData
+@inject Blazored.SessionStorage.ISessionStorageService SessionStorage
+@inject MongoUserService UserService
+@inject WeatherService WSService
+
+
+
+
+<MudAppBar Color="Color.Info" Class="mud-appbar">
+    <MudText Typo="Typo.h4"> WeatherApp</MudText>
+    <MudSpacer />
+    <MudNavLink Href="/" Icon="@Icons.Material.Rounded.Home" Style="margin-left: 44rem;"></MudNavLink>
+    <MudNavLink Href="/favoritecity" Icon="@Icons.Material.Rounded.Star"></MudNavLink>
+    <MudNavLink Href="/profile" Icon="@Icons.Material.Rounded.Person" ></MudNavLink>
+    <MudNavLink Href="/settings" Icon="@Icons.Material.Rounded.Settings"></MudNavLink>
+    <MudNavLink Href="/Login" Icon="@Icons.Material.Rounded.Login" />
+    
+</MudAppBar>
+
+<MudPaper Class="mx-auto my-6 pa-6" Style="max-width: 800px; border: 2px solid rgb(159, 57, 57); border-radius: 12px;">
+    <MudText Typo="Typo.h6" Align="Align.Center" Class="mb-4">Your Favorites Cities</MudText>
+
+    @if (favoriteWeathers == null || favoriteWeathers.Count == 0)
+    {
+        <MudText Align="Align.Center">You have no favorite cities yet.</MudText>
+    }
+    else
+    {
+        <MudTable Items="favoriteWeathers" Hover="true" Elevation="0">
+            <HeaderContent>
+                <MudTh Style="font-weight: bolder;">City</MudTh>
+                <MudTh Style="font-weight: bolder;">Temperature</MudTh>
+                <MudTh Style="font-weight: bolder;">Humidity</MudTh>
+                <MudTh Style="font-weight: bolder;">Wind</MudTh>
+                <MudTh Style="font-weight: bolder;">Action</MudTh>
+            </HeaderContent>
+
+            <RowTemplate>
+                <MudTd DataLabel="City">@context.Name</MudTd>
+                <MudTd DataLabel="Temperature">@context.Main.Temp&nbsp;°C</MudTd>
+                <MudTd DataLabel="Humidity">@context.Main.Humidity&nbsp;%</MudTd>
+                <MudTd DataLabel="Wind">@context.Wind.Speed&nbsp;km/h</MudTd>
+                <MudTd>
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                   Color="Color.Error"
+                                   Size="Size.Small"
+                                   OnClick="@(() => RemoveFavoriteCityAsync(context.Name))" />
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+
+        @if (!string.IsNullOrEmpty(alertMessage))
+        {
+            <MudAlert Severity="@alertSeverity" Elevation="0" Dense="true" Class="mt-2">
+                @alertMessage
+            </MudAlert>
+        }
+    }
+</MudPaper>
+
+
+
+@code {
+    private List<WeatherData> favoriteWeathers = new();
+    private List<string> fav = new();
+    private bool isLoading = true;
+    private bool _hasRendered = false;
+    private string alertMessage = string.Empty;
+    private Severity alertSeverity = Severity.Normal;
+    private System.Timers.Timer? alertTimer;
+    protected  override async Task OnInitializedAsync()
+    {
+        Console.WriteLine("Email: "+ uData.Email);
+        fav = await UserService.GetFavoriteCitiesAsync(uData.Email);
+        
+        foreach(var f in fav){
+            var a = await WSService.GetWeatherAsync(f);
+            favoriteWeathers.Add(a);
+        }  
+    }
+
+
+    private async Task RemoveFavoriteCityAsync(string cityName)
+    {
+        if (string.IsNullOrEmpty(uData.Email))
+        {
+            ShowAlert("User email is missing!", Severity.Error);
+            return;
+        }
+
+        var result = await UserService.RemoveFavoriteCityAsync(uData.Email, cityName);
+
+        if (result)
+        {
+            // Remove from local UI lists
+            favoriteWeathers.RemoveAll(w => w.Name == cityName);
+            fav.Remove(cityName);
+            StateHasChanged();
+            ShowAlert($"{cityName} removed from favorites", Severity.Info);   
+        }
+        else
+        {
+            ShowAlert($"Failed to remove {cityName} from favorites", Severity.Error);
+        }
+    }
+
+        private void ShowAlert(string message, Severity severity, int durationMs = 3000)
+        {
+            alertMessage = message;
+            alertSeverity = severity;
+
+            // Dispose any existing timer
+            alertTimer?.Stop();
+            alertTimer?.Dispose();
+
+            alertTimer = new System.Timers.Timer(durationMs);
+            alertTimer.Elapsed += (_, _) =>
+        {
+            alertMessage = string.Empty;
+            alertTimer?.Dispose();
+            InvokeAsync(StateHasChanged); // Refresh the UI from background thread
+        };
+            alertTimer.AutoReset = false;
+            alertTimer.Start();
+
+            StateHasChanged();
+    }
+
+}

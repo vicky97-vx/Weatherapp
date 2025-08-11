@@ -11,10 +11,11 @@ namespace WRModel.Models
 
     public class ForecastItem
     {
-        public long Dt { get; set; }  
+        public long Dt { get; set; }
         public MainInfo Main { get; set; } = new();
         public List<WeatherInfo> Weather { get; set; } = new();
         public WindInfo Wind { get; set; } = new();
+        
     }
 
     public class MainInfo
