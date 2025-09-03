@@ -1,105 +1,476 @@
-* {
+.mud-appbar {
+  background-color: var(--appbar-bg) !important;
+  color: var(--appbar-text) !important;
+  transition: background-color 0.3s;
+}
+
+.mud-drawer {
+  background-color: var(--sidebar-bg) !important;
+  color: var(--sidebar-text) !important;
+}
+
+.mud-paper {
+  background-color: var(--card-bg) !important;
+  color: var(--text-color) !important;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.mud-input {
+  background-color: var(--input-bg) !important;
+  color: var(--text-color) !important;
+}
+
+.mud-divider {
+  background-color: var(--divider-color) !important;
+}
+
+html, body{
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
-    scroll-behavior: smooth;
+    height: 100%;
+    width: 100%;
+    transition: background-color 0.3s, color 0.3s;
 }
 
-body{
-    margin-right: 9rem;
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+body.dark-mode .mud-card {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: box-shadow 0.4s ease;
+    background-color: #1e1e1e !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .mud-card:hover {
+    box-shadow: 0 4px 25px rgba(255, 255, 255, 0.15),
+                0 0 15px rgba(255, 255, 255, 0.1);
 }
 
 
-.mud-main-content {
-    min-height: 100vh;
+.gradient-card {
+    background: linear-gradient(365deg, blue, darkslategrey);
+    background-size: 400% 400%;
+    color: white;
+    transition: background 0.4s ease, color 0.4s ease;
+}
+
+.gradient-card-blue{
+     background: linear-gradient(135deg, grey, blue, lightblue);
+    background-size: 400% 400%;
+    color: white;
+    transition: background 0.4s ease, color 0.4s ease;
+}
+
+.gradient-card-orange{
+    background: linear-gradient(365deg, blue, darkslategrey);
+    background-size: 400% 400%;
+    color: white;
+    transition: background 0.4s ease, color 0.4s ease;
+}
+
+.gradient-card-red{
+    background: linear-gradient(155deg, darkslategrey, black, white, darkred);
+    background-size: 400% 400%;
+    color: white;
+    transition: background 0.4s ease, color 0.4s ease;
+}
+
+.gradient-card-green{
+    background: linear-gradient(155deg, darkslategrey, black, white, darkred);
+    background-size: 400% 400%;
+    color: white;
+    transition: background 0.4s ease, color 0.4s ease;
+}
+
+.gradient-card-black{
+    background: linear-gradient(155deg, darkslategrey, black, white, darkred);
+    background-size: 400% 400%;
+    color: white;
+    transition: background 0.4s ease, color 0.4s ease;
+}
+
+
+.gradient-card-pale{
+    background: linear-gradient(295deg,darkgreen, black );
+    background-size: 400% 400%;
+    color: white;
+    transition: background 0.4s ease, color 0.4s ease;
+
+}
+
+.gradient-card-neo{
+    background: linear-gradient(295deg,darkgreen, black );
+    background-size: 400% 400%;
+    color: white;
+    transition: background 0.4s ease, color 0.4s ease;
+
+}
+
+.gradient-card-sand{
+    background: linear-gradient(295deg,darkgreen, black );
+    background-size: 400% 400%;
+    color: white;
+    transition: background 0.4s ease, color 0.4s ease;
+}
+
+.gradient-card-mile{
+    background: linear-gradient(365deg, blue, darkslategrey);
+    background-size: 400% 400%;
+    color: white;
+    transition: background 0.4s ease, color 0.4s ease;
+}
+
+.gradient-card-jade{
+    background: linear-gradient(135deg, lightblue, blue, grey);
+    background-size: 400% 400%;
+    color: white;
+    transition: background 0.4s ease, color 0.4s ease;
+}
+
+
+.page-layout {
+    display: flex;
+    height: 100vh; 
+    width: 100vw; 
+    top: 0;
+    left: 0;
 }
 
 .my-sidebar {
-    margin-top: 2px;
-    margin-left: 25px; 
     border-radius: 20px;
+    padding: 20px 0;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    margin-left: 40px;
+    background: linear-gradient(300deg, blue, darkslategrey);
+    background-size: 400% 400%;
+    color: white;
+    transition: background 0.4s ease, color 0.4s ease;
+}
+
+.main-content { 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    gap: 20px;
+    box-sizing: border-box;
+    width: calc(100% - 90px); /* subtract sidebar width */
+    margin-left: 90px; /* push next to sidebar */
+}
+
+.full-height-container {
     display: flex;
     flex-direction: column;
 }
 
-.my-app-name {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-    font-weight: bold;
+.full-height-grid {
+    display: flex;
+}
+
+.full-height-grid > .mud-grid-item {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+ 
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.nav-icon {
+    display: flex;
+    flex-direction: column;
+    margin-left: 18px;
+    margin: 18px 0;
+    width: 60px;
+    height: 60px;
+    font-size: 2rem;
+    color: #888; /* default color */
+    transition: color 0.3s ease-in-out;
+}
+
+.nav-icon:hover {
+    color: white; /* color on hover */
 }
 
 .profile-circle {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 1rem;
+    margin-left: auto;
+    width: 50px;
+    height: 70px;
+    margin-bottom: 18px;
 }
 
-
-
-.glass-card {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(12px);
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        color: grey;
-    }
-.overlay {
-        background-color: rgba(0, 0, 0, 0.6);
-        backdrop-filter: blur(8px);
-    }
-
-.glass-navbar {
-    backdrop-filter: blur(16px);
-    background-color: rgba(255, 255, 255, 0.07);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    color: white;
-    
-}
-
-.forecast-scroll::-webkit-scrollbar {
-    width: 6px; /* thinner scrollbar */
-}
-
-.forecast-scroll::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.forecast-scroll::-webkit-scrollbar-thumb {
-    background-color: blueviolet; /* your color, here it's blue */
-    border-radius: 4px;
-    border: 1px solid transparent;
-}
-
-/* Optional: Firefox support */
 .forecast-scroll {
-    scrollbar-width: thin;
-    scrollbar-color: blueviolet transparent; /* your color */
+        display: flex;
+        overflow-x: auto;
+        padding-bottom: 8px;
+    }
+    .forecast-scroll::-webkit-scrollbar {
+        height: 6px;
+    }
+    .forecast-scroll::-webkit-scrollbar-thumb {
+        background-color: #888;
+        border-radius: 4px;
+    }
+    .forecast-scroll::-webkit-scrollbar-thumb:hover {
+        background-color: #555;
+    }
+
+.search-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; 
+}
+
+.search-input {
+    width: 300px;    
+}
+
+.search-btn {
+    border: 2px solid #6c63ff; 
+    border-radius: 8px;
+    background-color: white;
+    color: #6c63ff !important;
+}
+
+.sun-dot {
+    transition: all 1s linear;  
+    r: 8;
+    fill: orange;
 }
 
 
+/* Container and Paper Styling */
+.login-card {
+    background-color: var(--login-bg, #1e1e1e); /* Dark by default */
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    color: #fff;
+    /* transition: background-color 0.3s ease, border-color 0.3s ease;
+    background: linear-gradient(135deg, lightblue, blue, grey);
+    background-size: 400% 400%;
+    transition: background 0.4s ease, color 0.4s ease; */
+
+}
+
+/* Light Mode Support */
+.light-mode .login-card {
+    background-color: #ffffff;
+    color: #000;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Heading Styles */
+.login-card h5 {
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.login-card h5 span:first-child {
+    color: #4fc3f7; /* Blue accent */
+}
+
+.login-card h5 span:last-child {
+    color: #ff5252; /* Red accent */
+}
+
+/* Input Fields */
+.login-card .mud-input-root {
+    background-color: #2a2a2a;
+    border-radius: 6px;
+    color: white;
+}
+
+.light-mode .login-card .mud-input-root {
+    background-color: #f5f5f5;
+    color: black;
+}
+
+/* Login Button */
+.login-card .log {
+    background: linear-gradient(90deg, #4fc3f7, #1976d2);
+    color: white !important;
+    font-size: 22px;
+    font-weight: bold;
+    border-radius: 8px;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.login-card .log:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(79, 195, 247, 0.4);
+}
+
+/* Signup Text */
+.login-card .mud-link {
+    color: #4fc3f7;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.login-card .mud-link:hover {
+    color: #82e9de;
+}
 
 
+@media (max-width: 1024px) {
+    .main-content {
+        width: calc(100% - 70px);
+        margin-left: 70px;
+        padding: 15px;
+    }
 
-/* Responsive improvements */
+    .my-sidebar {
+        margin-left: 20px;
+        padding: 15px 0;
+    }
+
+    .nav-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+
+    .search-input {
+        width: 240px;
+    }
+}
+
+/* Mobile (≤ 768px) */
 @media (max-width: 768px) {
-    .app {
-        padding: 1.5rem;
-    }
-
-    .mud-appbar {
-        flex-direction: column;
-        gap: 1rem;
-        align-items: center;
-    }
-
-    .fav {
+    .page-layout {
         flex-direction: column;
     }
 
-    .mud-progress-circular {
+    .my-sidebar {
+        flex-direction: row;
+        justify-content: center;
+        width: 100%;
+        height: auto;
         margin-left: 0;
+        border-radius: 0;
+        padding: 10px;
+    }
+
+    .sidebar-menu {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .nav-icon {
+        margin: 0 10px;
+        width: 45px;
+        height: 45px;
+        font-size: 1.4rem;
+    }
+
+    .main-content {
+        width: 100%;
+        margin-left: 0;
+        padding: 15px;
+    }
+
+    .search-input {
+        width: 200px;
+    }
+
+    .forecast-scroll {
+        gap: 12px;
+    }
+
+    .login-card {
+        width: 90%;
+        margin: 0 auto;
+    }
+}
+
+/* Extra Small Devices (≤ 480px) */
+@media (max-width: 480px) {
+    .nav-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+
+    .search-container {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .search-input {
+        width: 100%;
+    }
+
+    .login-card h5 {
+        font-size: 24px;
+    }
+
+    .login-card .log {
+        font-size: 18px;
+    }
+}
+
+/* Prevent overlapping of sections */
+.full-height-grid {
+    flex-wrap: wrap; /* allow items to move to new row if needed */
+    gap: 20px;       /* add spacing between forecast & map */
+}
+
+.full-height-grid > .mud-grid-item {
+    flex: 1 1 100%; /* let items shrink and stack if space is small */
+    min-width: 300px; /* ensures content doesn’t collapse */
+}
+
+/* Forecast and Map responsive layout */
+@media (min-width: 1024px) {
+    .forecast-scroll, .map-container {
+        flex: 1 1 48%; /* side by side on desktop */
+    }
+}
+
+@media (max-width: 1023px) {
+    .forecast-scroll, .map-container {
+        flex: 1 1 100%; /* stack on smaller screens */
+    }
+}
+
+/* Today’s Highlights section */
+.highlights-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.highlights-grid > .mud-card {
+    flex: 1 1 calc(33.333% - 10px); /* 3 per row desktop */
+    min-width: 220px;
+}
+
+@media (max-width: 768px) {
+    .highlights-grid > .mud-card {
+        flex: 1 1 100%; /* stack cards on mobile */
     }
 }

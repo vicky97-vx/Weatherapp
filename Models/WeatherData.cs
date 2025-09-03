@@ -5,18 +5,32 @@ namespace WRModel.Models
 {
     public class WeatherData
     {
+        public Coord Coord { get; set; }
         public Main Main { get; set; }
-        public List<Weather> weather { get; set; }
+        public List<Weather> Weather { get; set; }
         public Wind Wind { get; set; }
         public Sys Sys { get; set; }
         public string Name { get; set; }
+        public int Visibility { get; set; }
+        public double UVIndex { get; set; } 
+
     }
 
+    public class Coord
+    {
+        public double Lon { get; set; }
+        public double Lat { get; set; }
+    }
     public class Main
     {
         public double Temp { get; set; }
         public int Humidity { get; set; }
         public int Pressure { get; set; }
+        public double TempMin { get; set; }
+        public double TempMax { get; set; } 
+
+        
+        
     }
 
     public class Weather

@@ -1,27 +1,43 @@
 @using MudBlazor
 @using WSService.Services
+@using Microsoft.JSInterop
 @using Microsoft.AspNetCore.Components.Routing
 
 
 @inherits LayoutComponentBase
+@inject IJSRuntime JS
+
 @inject NavigationManager NavManager
-@inject WSService.Services.ThemeService ThemeService
 @inject Blazored.SessionStorage.ISessionStorageService SessionStorage
+
 
 
 <MudThemeProvider />
     <MudLayout> 
-        @* <MudAppBar Color="Color.Primary">
-            <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="ToggleSidebar" />
-            <MudText Typo="Typo.h6" Class="ml-2">WEATHERAPP</MudText>
-        </MudAppBar >  *@
+        <MudDrawer Open="true" Anchor="Anchor.Left" Variant="DrawerVariant.Persistent" 
+           Class="mud-elevation-2 my-sidebar" 
+           Style="width: 90px;margin-left: 17px; display: flex; justify-content: center; align-items: center;">
+            <MudNavMenu Class="sidebar-menu" Style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; gap: 20px; ">
+                <MudText  Class="text-center my-app-name" Style="font-size: 1rem; font-weight: bold;">
+                    Weather<br />App
+                </MudText>
+       
+             <MudDivider />
 
-        @* <MudDrawer @bind-Open="@isSidebarOpen" Variant="DrawerVariant.Temporary">
-            <MudNavMenu>
-                <MudNavLink Href="/" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
-                <MudNavLink Href="/profile" Icon="@Icons.Material.Filled.Person">Profile</MudNavLink>
+                <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home" Class="nav-icon" Style="margin-right: -10px;"/>
+                <MudNavLink Href="/favoritecity" Icon="@Icons.Material.Outlined.Favorite" Class="nav-icon" Style="margin-right: -10px;"/>
+                <MudNavLink Href="/settings" Icon="@Icons.Material.Filled.ManageAccounts" Class="nav-icon" Style="margin-right: -10px;"/>
+                <MudNavLink Href="/login" Icon="@Icons.Material.Outlined.Login" Class="nav-icon" Style="margin-right: -10px;"/>
+        
+
+                <MudSpacer />
+
+                <MudNavLink Href="/profile" Class="profile-circle mb-4">
+                    <MudIcon Icon="@Icons.Material.Filled.Person" Size="Size.Large" Style="margin-left: -1.8vh;"/>
+                </MudNavLink>
             </MudNavMenu>
-        </MudDrawer> *@
+        </MudDrawer>
+
 
         <MudMainContent>
             @Body
@@ -33,16 +49,16 @@
     </MudLayout>
 
 
-@code {
-    private bool isSidebarOpen = false;
+@code{
 
-    private void CloseSidebar() => isSidebarOpen = false;
-
-    
-    
-
-    private void ToggleSidebar()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        isSidebarOpen = !isSidebarOpen;
+        
+            // Ensure theme applies globally even if page is not Settings
+            await JS.InvokeVoidAsync("applySavedTheme");
+        
     }
-} 
+    
+
+    
+}

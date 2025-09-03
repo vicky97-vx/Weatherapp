@@ -17,7 +17,6 @@ builder.Services.AddScoped<MongoUserService>();
 
 
 builder.Services.AddHttpClient<WeatherService>();
-builder.Services.AddScoped<ThemeService>();
 builder.Services.AddScoped<SearchHistoryService>();
 builder.Services.AddBlazoredSessionStorage();
 builder.Services.AddMudServices();

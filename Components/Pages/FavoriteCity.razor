@@ -10,19 +10,7 @@
 
 
 
-
-<MudAppBar Color="Color.Info" Class="mud-appbar">
-    <MudText Typo="Typo.h4"> WeatherApp</MudText>
-    <MudSpacer />
-    <MudNavLink Href="/" Icon="@Icons.Material.Rounded.Home" Style="margin-left: 44rem;"></MudNavLink>
-    <MudNavLink Href="/favoritecity" Icon="@Icons.Material.Rounded.Star"></MudNavLink>
-    <MudNavLink Href="/profile" Icon="@Icons.Material.Rounded.Person" ></MudNavLink>
-    <MudNavLink Href="/settings" Icon="@Icons.Material.Rounded.Settings"></MudNavLink>
-    <MudNavLink Href="/Login" Icon="@Icons.Material.Rounded.Login" />
-    
-</MudAppBar>
-
-<MudPaper Class="mx-auto my-6 pa-6" Style="max-width: 800px; border: 2px solid rgb(159, 57, 57); border-radius: 12px;">
+<MudPaper Class="mx-auto my-6 pa-6 gradient-card-mile" Style="max-width: 800px; border-radius: 12px;">
     <MudText Typo="Typo.h6" Align="Align.Center" Class="mb-4">Your Favorites Cities</MudText>
 
     @if (favoriteWeathers == null || favoriteWeathers.Count == 0)

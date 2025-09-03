@@ -15,12 +15,17 @@ namespace WRModel.Models
         public MainInfo Main { get; set; } = new();
         public List<WeatherInfo> Weather { get; set; } = new();
         public WindInfo Wind { get; set; } = new();
+        public string dt_txt { get; set; } 
         
     }
 
     public class MainInfo
     {
         public float Temp { get; set; }
+         public double TempMin { get; set; }
+
+        [JsonPropertyName("temp_max")]
+        public double TempMax { get; set; }
     }
 
     public class WeatherInfo

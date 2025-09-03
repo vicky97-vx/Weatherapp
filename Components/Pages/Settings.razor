@@ -6,59 +6,52 @@
 @rendermode InteractiveServer
 @inject Blazored.SessionStorage.ISessionStorageService SessionStorage
 @inject NavigationManager Navigation
-
-<MudAppBar Color="Color.Info" Class="mud-appbar">
-    <MudText Typo="Typo.h4"> WeatherApp</MudText>
-    
-    <MudSpacer />
-
-    <MudNavLink Href="/" Icon="@Icons.Material.Rounded.Home" Style="margin-left: 48rem;"></MudNavLink>
-    <MudNavLink Href="/favoritecity" Icon="@Icons.Material.Rounded.Star"></MudNavLink>
-    <MudNavLink Href="/profile" Icon="@Icons.Material.Rounded.Person" ></MudNavLink>
-    <MudNavLink Href="/settings" Icon="@Icons.Material.Rounded.Settings"></MudNavLink>
-</MudAppBar>
+@inject IJSRuntime JS
 
 
-<MudPaper Class="pa-4 mx-auto mt-6" Style="max-width: 500px;">
+<MudPaper Class="pa-4 mx-auto mt-6 gradient-card-jade" Style="max-width: 500px; border-radius: 12px;">
     <MudText Typo="Typo.h5" GutterBottom Style="text-align:center;">Settings</MudText>
 
     <MudText Typo="Typo.h6">About</MudText>
     <MudText Class="mb-4">WeatherApp is a modern weather application, providing real-time weather updates and forecasts.</MudText>
     <MudText Typo="Typo.h6">Help Center</MudText>
     <MudText Class="mb-4">For assistance, please visit our <MudLink Href="https://example.com/help" Target="_blank">Help Center</MudLink>.</MudText>
-    <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="LogoutUser"  Style="text-align:center; width: 100%;">
-        Logout
-    </MudButton>
-</MudPaper>
+  
+   <MudStack Direction="Row" Align="Align.Center" Style="width:100%;">
+        <!-- Logout Button -->
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="LogoutUser" Style="flex:1;">
+            Logout
+        </MudButton>
+
+        <!-- Theme Toggle Icon -->
+        <MudIconButton Icon="@Icons.Material.Filled.WbSunny"
+                    Color="Color.Default"
+                    Size="Size.Large"
+                    OnClick="@(() => JS.InvokeVoidAsync("toggleDarkMode"))"
+                    Style="margin-left:10px;" />
+    </MudStack>
+</MudPaper>    
+ 
+   
 
 @code {
-    private bool _isDark = false;
-    private string _selectedLanguage = "en";
+    
+   
     private bool _renderComplete = false;
     private bool _hasInitialized = false;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-       if (firstRender && !_hasInitialized)
+        if (firstRender)
         {
-            _hasInitialized = true;
-
-            var storedTheme = await SessionStorage.GetItemAsync<bool>("isDarkMode");
-            var storedLang = await SessionStorage.GetItemAsync<string>("selectedLanguage");
-
-            _isDark = storedTheme;
-            _selectedLanguage = string.IsNullOrWhiteSpace(storedLang) ? "en" : storedLang;
-
-            _renderComplete = true;
-            StateHasChanged(); // Important: refresh UI after loading settings
+            // Apply saved theme when visiting settings page
+            await JS.InvokeVoidAsync("applySavedTheme");
         }
     }
 
     private async Task ToggleTheme()
     {
-        _isDark = !_isDark;
-        await SessionStorage.SetItemAsync("isDarkMode", _isDark);
-        StateHasChanged();
+        await JS.InvokeVoidAsync("toggleDarkMode");
     }
     
 
